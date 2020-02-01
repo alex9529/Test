@@ -17,7 +17,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 public class ZoteroApplication {
 
-
+	private ItemSQL itemSQL;
 	private static final Logger log = LoggerFactory.getLogger(ZoteroApplication.class);
 	public static void main(String[] args) {
 		SpringApplication.run(ZoteroApplication.class, args);
@@ -34,6 +34,7 @@ public class ZoteroApplication {
 			Item item = restTemplate.getForObject(
 					"https://api.zotero.org/users/6098055/items/56DQEYU6?key=NNb41PLF2hKJBKbo3tCtEJuO", Item.class);
 
+			itemSQL = new ItemSQL(item);
 			log.info(item.toString());
 		};
 	}
@@ -42,8 +43,7 @@ public class ZoteroApplication {
 	@Bean
 	public CommandLineRunner demo(ItemRepository repository) {
 		return (args) -> {
-			ItemSQL item = new ItemSQL("asd1");
-			repository.save(item);
+			repository.save(itemSQL);
 			log.info("");
 		};
 	}
