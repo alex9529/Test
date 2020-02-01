@@ -6,10 +6,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.time.LocalDateTime;
+import java.util.LinkedList;
 
 
-@Entity (name="Item_sql")
+@Entity (name="item")
 public class ItemSQL {
 
 
@@ -22,11 +22,10 @@ public class ItemSQL {
     private String href;
     private int creatorUserId;
     private String creatorSummary;
-    private int parsedDate;
+    private String parsedDate;
     private String parentItem;
     private String itemType;
-    private String collectionKey;
-    private LocalDateTime accessDate;
+    private String accessDate;
     private String archive;
     private String archiveLocation;
 
@@ -59,7 +58,7 @@ public class ItemSQL {
         return creatorSummary;
     }
 
-    public int getParsedDate() {
+    public String getParsedDate() {
         return parsedDate;
     }
 
@@ -71,11 +70,8 @@ public class ItemSQL {
         return itemType;
     }
 
-    public String getCollectionKey() {
-        return collectionKey;
-    }
 
-    public LocalDateTime getAccessDate() {
+    public String getAccessDate() {
         return accessDate;
     }
 
@@ -90,23 +86,25 @@ public class ItemSQL {
     protected ItemSQL() {}
 
     public ItemSQL(Item item) {
-        try {
+
             this.key = item.getKey();
             this.version = item.getVersion();
             this.groupOrUserId = item.getLibrary().getId();
             this.href = item.getLinks().getAlternate().getHref();
-            this.creatorUserId = item.getMeta().get;
-            this.creatorSummary = sad;
-            this.parsedDate = sad;
-            this.parentItem = sad;
-            this.itemType = sad;
-            this.collectionKey = sad;
-            this.accessDate = sad;
-            this.archive = sad;
-            this.archiveLocation = sad;
-        } finally {
 
-        }
+            if (item.getLibrary().getType()=="group"){
+                this.creatorUserId = item.getMeta().getCreatedByUser().getId();
+            }
+
+            this.creatorSummary = item.getMeta().getCreatorSummary();
+            this.parsedDate = item.getMeta().getParsedDate();
+            this.parentItem = item.getData().getParentItem();
+            this.itemType = item.getData().getItemType();
+            this.accessDate = item.getData().getAccessDate();
+            this.archive = item.getData().getArchive();
+            this.archiveLocation = item.getData().getArchiveLocation();
+
+
 
 
 

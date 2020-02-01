@@ -32,7 +32,7 @@ public class ZoteroApplication {
 	public CommandLineRunner run(RestTemplate restTemplate) throws Exception {
 		return args -> {
 			Item item = restTemplate.getForObject(
-					"https://api.zotero.org/users/6098055/items/56DQEYU6?key=NNb41PLF2hKJBKbo3tCtEJuO", Item.class);
+					"https://api.zotero.org/users/6098055/items/DWU7JMWB?key=NNb41PLF2hKJBKbo3tCtEJuO", Item.class);
 
 			itemSQL = new ItemSQL(item);
 			log.info(item.toString());

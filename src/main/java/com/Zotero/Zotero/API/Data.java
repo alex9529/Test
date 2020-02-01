@@ -2,7 +2,6 @@ package com.Zotero.Zotero.API;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import java.time.LocalDateTime;
 import java.util.LinkedList;
 
 
@@ -12,6 +11,7 @@ public class Data {
 
     private String key;
     private int version;
+    private String parentItem;
     private String itemType;
     private String title;
     private LinkedList<Creators> creators;
@@ -30,7 +30,7 @@ public class Data {
     private String ISSN;
     private String shortTitle;
     private String url;
-    private LocalDateTime accessDate;
+    private String accessDate;
     private String archive;
     private String archiveLocation;
     private String libraryCatalog;
@@ -40,8 +40,8 @@ public class Data {
     private LinkedList <String> tags;
     private LinkedList <String> collections;
     private Relation relations;
-    private LocalDateTime dateAdded;
-    private LocalDateTime dateModified;
+    private String dateAdded;
+    private String dateModified;
 
     public String getKey() {
         return key;
@@ -77,6 +77,10 @@ public class Data {
 
     public String getDate()  {
         return date;
+    }
+
+    public String getParentItem() {
+        return parentItem;
     }
 
     public String getSeries() {
@@ -115,7 +119,7 @@ public class Data {
         return url;
     }
 
-    public LocalDateTime getAccessDate() {
+    public String getAccessDate() {
         return accessDate;
     }
 
@@ -155,11 +159,11 @@ public class Data {
         return relations;
     }
 
-    public LocalDateTime getDateAdded() {
+    public String getDateAdded() {
         return dateAdded;
     }
 
-    public LocalDateTime getDateModified() {
+    public String getDateModified() {
         return dateModified;
     }
 
