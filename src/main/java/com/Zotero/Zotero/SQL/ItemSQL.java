@@ -1,12 +1,12 @@
 package com.Zotero.Zotero.SQL;
 
+import com.Zotero.Zotero.API.Collection;
 import com.Zotero.Zotero.API.Item;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.LinkedList;
 
 
 @Entity (name="item")
@@ -111,9 +111,6 @@ public class ItemSQL {
 
     }
 
-    public Item JSONtoSQL(Item item){
-        this.key=item.getKey();
-        return item;
-    }
+
 
 }

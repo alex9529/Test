@@ -1,13 +1,25 @@
 package com.Zotero.Zotero.API;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Meta {
-    private createdByUser createdByUser;
+    private CreatedByUser createdByUser;
     private String creatorSummary;
     private String parsedDate;
     private int numChildren;
+    private int numCollections;
+    private int numItems;
 
+    public int getNumCollections() {
+        return numCollections;
+    }
 
-    public com.Zotero.Zotero.API.createdByUser getCreatedByUser() {
+    public int getNumItems() {
+        return numItems;
+    }
+
+    public CreatedByUser getCreatedByUser() {
         return createdByUser;
     }
     public String getCreatorSummary() {

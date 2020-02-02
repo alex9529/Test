@@ -1,5 +1,8 @@
 package com.Zotero.Zotero.API;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Library {
 
     private String type;

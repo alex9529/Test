@@ -11,6 +11,8 @@ public class Data {
 
     private String key;
     private int version;
+    private String name;
+    private String parentCollection;
     private String parentItem;
     private String itemType;
     private String title;
@@ -51,6 +53,10 @@ public class Data {
         return version;
     }
 
+    public String getParentCollection() {
+        return parentCollection;
+    }
+
     public LinkedList<Creators> getCreators() {
         return creators;
     }
@@ -69,6 +75,10 @@ public class Data {
 
     public int getIssue() {
         return issue;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getPages() {

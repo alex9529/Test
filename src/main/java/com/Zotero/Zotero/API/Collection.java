@@ -1,9 +1,10 @@
 package com.Zotero.Zotero.API;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Item {
+public class Collection {
 
     private String key;
     private int version;
@@ -12,7 +13,13 @@ public class Item {
     private Meta meta;
     private Data data;
 
+    public String getKey() {
+        return key;
+    }
 
+    public String getCollectionKey() {
+        return key;
+    }
 
     public int getVersion() {
         return version;
@@ -30,22 +37,7 @@ public class Item {
         return meta;
     }
 
-    public Item() {
-    }
-
-    public String getKey() {
-        return this.key;
-    }
-
     public Data getData() {
-        return this.data;
+        return data;
     }
-
-
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-
 }

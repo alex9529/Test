@@ -1,6 +1,6 @@
 package com.Zotero.Zotero.API;
 
-public class createdByUser {
+public class CreatedByUser {
     private int id;
     private String username;
     private Links links;
