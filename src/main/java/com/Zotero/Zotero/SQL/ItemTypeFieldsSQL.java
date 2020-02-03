@@ -96,13 +96,17 @@ public class ItemTypeFieldsSQL implements Serializable {
     private String websiteTitle;
     private String ISSN;
     private String seriesText;
-    
+
 
 
     public ItemTypeFieldsSQL() {
     }
 
     public ItemTypeFieldsSQL(Item item)  {
+
+
+
+
 
 
 

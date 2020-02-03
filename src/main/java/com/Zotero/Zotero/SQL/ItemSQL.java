@@ -7,6 +7,17 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 
+/**
+ * Die Klasse widerspiegelt die Datenstruktur für die Entität "item" in der PostgreSQL DB. Das Attribut creatorUserId kommt nur bei Items vor, die Bestandteil einer geteilten Bibliothek sind,
+ * um auf den Item-Erstellter hinzudeuten.
+ * Die Annotation @Entity gibt den Namen der Entität an Spring Boot weiter.
+ * @Id kennzeichnet das Attribut "key" als den Primärschlüssel.
+ *
+ * @author Alexander Nikolov
+ *
+ */
+
+
 @Entity (name="item")
 public class ItemSQL {
 
@@ -24,6 +35,7 @@ public class ItemSQL {
     private String accessDate;
     private String archive;
     private String archiveLocation;
+    private  String bib;
 
 
     public String getKey() {
@@ -77,7 +89,7 @@ public class ItemSQL {
 
     protected ItemSQL() {}
 
-    public ItemSQL(Item item) {
+    public ItemSQL(Item item, Item bibItem) {
 
             this.key = item.getKey();
             this.version = item.getVersion();
@@ -95,12 +107,7 @@ public class ItemSQL {
             this.accessDate = item.getData().getAccessDate();
             this.archive = item.getData().getArchive();
             this.archiveLocation = item.getData().getArchiveLocation();
-
-
-
-
-
-
+            this.bib = bibItem.getBib();
     }
 
 

@@ -2,6 +2,14 @@ package com.Zotero.Zotero.API;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+/** Die Klasse übernimmt alle JSON Attribute aus der GET HTTP Abfrage. Die Attribute widerspiegeln exakt die JSON-Struktur.
+ * Nicht vorhandene Attribute werden mittels @JsonIgnoreProperties ignoriert, um einen runtime-Fehler zu vermeiden. Attribute wie Data und Meta sind ebenfalls JSON Objekte, aus welchem Grund
+ * extra Klassen dafür angelegt wurden.
+ *
+ * @author Alexander Nikolov
+ *
+ */
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Item {
 
@@ -11,6 +19,11 @@ public class Item {
     private Links links;
     private Meta meta;
     private Data data;
+    private String bib;
+
+    public String getBib() {
+        return bib;
+    }
 
 
 

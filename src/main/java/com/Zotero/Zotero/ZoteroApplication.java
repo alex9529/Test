@@ -38,13 +38,17 @@ public class ZoteroApplication {
 	public CommandLineRunner run(RestTemplate restTemplate) throws Exception {
 		return args -> {
 			Item item = restTemplate.getForObject(
-
 					"https://api.zotero.org/users/6098055/items/DWU7JMWB?key=NNb41PLF2hKJBKbo3tCtEJuO", Item.class);
+
+			Item itemBib = restTemplate.getForObject(
+					"https://api.zotero.org/users/6098055/items/DWU7JMWB?include=bib&key=NNb41PLF2hKJBKbo3tCtEJuO", Item.class);
+
 
 			Collection collection = restTemplate.getForObject(
 					"https://api.zotero.org/users/6098055/collections/YPQC2LG5?key=NNb41PLF2hKJBKbo3tCtEJuO", Collection.class);
 
-			itemSQL = new ItemSQL(item);
+			itemSQL = new ItemSQL(item, itemBib);
+
 			collectionSQL = new CollectionSQL(collection);
 			itemCollectionSQLList = new LinkedList<ItemCollectionSQL>();
 			for (int i = 0; i<item.getData().getCollections().size(); i++){
