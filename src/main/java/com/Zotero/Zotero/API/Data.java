@@ -165,6 +165,10 @@ public class Data {
         return collections;
     }
 
+    public void setCollections(String collection) {
+        this.collections.addFirst(collection);
+    }
+
     public Relation getRelations() {
         return relations;
     }
@@ -194,11 +198,5 @@ public class Data {
         this.title = title;
     }
 
-    @Override
-    public String toString() {
-        return "Data{" +
-                "title= " + "\"" + title + "\"" +
-                ", itemtype='" + itemType + '\'' +
-                '}';
-    }
+
 }
