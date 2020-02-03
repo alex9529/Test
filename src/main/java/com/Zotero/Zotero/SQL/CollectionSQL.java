@@ -2,19 +2,17 @@ package com.Zotero.Zotero.SQL;
 
 import com.Zotero.Zotero.API.Collection;
 import javax.persistence.*;
+import java.io.Serializable;
 
 
 @Entity (name="collection")
-//@IdClass(CollectionSQL.class)
-public class CollectionSQL {
+public class CollectionSQL  {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
     private String collectionKey;
-    private int version;
     private int groupOrUserId;
+    private int version;
     private String linksSelfHref;
     private int numItems;
     private int numCollections;

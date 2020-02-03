@@ -39,7 +39,6 @@ public class Data {
     private String callNumber;
     private String rights;
     private String extra;
-    private LinkedList <String> tags;
     private LinkedList <String> collections;
     private Relation relations;
     private String dateAdded;
@@ -157,16 +156,13 @@ public class Data {
         return extra;
     }
 
-    public LinkedList<String> getTags() {
-        return tags;
-    }
+
 
     public LinkedList<String> getCollections() {
+        if (collections==null){
+            return new LinkedList<String>();
+        }
         return collections;
-    }
-
-    public void setCollections(String collection) {
-        this.collections.addFirst(collection);
     }
 
     public Relation getRelations() {
