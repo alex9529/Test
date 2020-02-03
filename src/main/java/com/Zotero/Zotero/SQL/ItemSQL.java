@@ -4,8 +4,6 @@ import com.Zotero.Zotero.API.Collection;
 import com.Zotero.Zotero.API.Item;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 
@@ -14,8 +12,6 @@ public class ItemSQL {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
     private String key;
     private int version;
     private int groupOrUserId;
@@ -29,10 +25,6 @@ public class ItemSQL {
     private String archive;
     private String archiveLocation;
 
-
-    public int getId() {
-        return id;
-    }
 
     public String getKey() {
         return key;
