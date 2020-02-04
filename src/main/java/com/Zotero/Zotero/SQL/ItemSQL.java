@@ -24,7 +24,7 @@ public class ItemSQL {
     @Id
     private String key;
     private int version;
-    private int groupOrUserId;
+    private int userProjectId;
     private String href;
     private int creatorUserId;
     private String creatorSummary;
@@ -46,7 +46,7 @@ public class ItemSQL {
     }
 
     public int getGroupOrUserId() {
-        return groupOrUserId;
+        return userProjectId;
     }
 
     public String getHref() {
@@ -92,7 +92,7 @@ public class ItemSQL {
 
             this.key = item.getKey();
             this.version = item.getVersion();
-            this.groupOrUserId = item.getLibrary().getId();
+            this.userProjectId = item.getLibrary().getId();
             this.href = item.getLinks().getAlternate().getHref();
 
             if (item.getLibrary().getType()=="group"){

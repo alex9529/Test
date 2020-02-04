@@ -11,8 +11,7 @@ public class UserOrProjectSQL {
 
 
     @Id
-    private int key;
-    private int userOrProjectId;
+    private int userProjectId;
     private String type;
     private String name;
     private String libraryLink;
@@ -22,7 +21,7 @@ public class UserOrProjectSQL {
 
     public UserOrProjectSQL(Item item)  {
 
-        this.userOrProjectId = item.getLibrary().getId();
+        this.userProjectId = item.getLibrary().getId();
         this.type = item.getLibrary().getType();
         this.name = item.getLibrary().getName();
         this.libraryLink = item.getLibrary().getLinks().getAlternate().getHref();

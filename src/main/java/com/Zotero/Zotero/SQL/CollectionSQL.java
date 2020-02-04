@@ -10,7 +10,7 @@ public class CollectionSQL  {
 
     @Id
     private String collectionKey;
-    private int groupOrUserId;
+    private int userProjectId;
     private int version;
     private String linksSelfHref;
     private int numItems;
@@ -47,8 +47,8 @@ public class CollectionSQL  {
         return version;
     }
 
-    public int getGroupOrUserId() {
-        return groupOrUserId;
+    public int getUserProjectId() {
+        return userProjectId;
     }
 
     protected CollectionSQL() {}
@@ -57,7 +57,7 @@ public class CollectionSQL  {
 
             this.collectionKey = collection.getCollectionKey();
             this.version = collection.getVersion();
-            this.groupOrUserId = collection.getLibrary().getId();
+            this.userProjectId = collection.getLibrary().getId();
             this.linksSelfHref = collection.getLinks().getSelf().getHref();
             this.numItems = collection.getMeta().getNumItems();
             this.numCollections = collection.getMeta().getNumCollections();

@@ -22,6 +22,7 @@ public class ZoteroApplication {
 	private CollectionSQL collectionSQL;
 	private LinkedList<ItemCollectionSQL> itemCollectionSQLList;
 	private ItemTypeFieldsSQL itemTypeFieldsSQL;
+	private UserOrProjectSQL userOrProjectSQL;
 
 	private static final Logger log = LoggerFactory.getLogger(ZoteroApplication.class);
 	public static void main(String[] args) {
@@ -56,6 +57,8 @@ public class ZoteroApplication {
 			log.info(item.toString());
 
 			itemTypeFieldsSQL = new ItemTypeFieldsSQL(item);
+			userOrProjectSQL = new UserOrProjectSQL(item);
+
 
 
 		};
@@ -63,7 +66,8 @@ public class ZoteroApplication {
 
 
 	@Bean
-	public CommandLineRunner demo(ItemRepository itemRepo, CollectionRepository collectionRepo, ItemCollectionRepository itemCollectionRepo, ItemTypeFieldsRepository itemTypeFieldsRepo) {
+	public CommandLineRunner demo(ItemRepository itemRepo, CollectionRepository collectionRepo, ItemCollectionRepository itemCollectionRepo,
+								  ItemTypeFieldsRepository itemTypeFieldsRepo, UserOrProjectRepository userOrProjectRepo) {
 		return (args) -> {
 			itemRepo.save(itemSQL);
 			collectionRepo.save(collectionSQL);
@@ -71,6 +75,7 @@ public class ZoteroApplication {
 				itemCollectionRepo.save(itemCollectionSQLList.get(i));
 			}
 			itemTypeFieldsRepo.save(itemTypeFieldsSQL);
+			userOrProjectRepo.save(userOrProjectSQL);
 			log.info("");
 		};
 	}
