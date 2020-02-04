@@ -1,7 +1,6 @@
 package com.Zotero.Zotero.SQL;
 
-import com.Zotero.Zotero.API.Collection;
-import com.Zotero.Zotero.API.Item;
+import com.Zotero.Zotero.JSONObjects.Item;
 
 import javax.persistence.*;
 import java.io.Serializable;

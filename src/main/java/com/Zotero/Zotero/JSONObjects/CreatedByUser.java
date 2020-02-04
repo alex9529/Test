@@ -1,4 +1,4 @@
-package com.Zotero.Zotero.API;
+package com.Zotero.Zotero.JSONObjects;
 
 public class CreatedByUser {
     private int id;

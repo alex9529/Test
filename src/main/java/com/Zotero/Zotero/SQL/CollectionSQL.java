@@ -1,8 +1,7 @@
 package com.Zotero.Zotero.SQL;
 
-import com.Zotero.Zotero.API.Collection;
+import com.Zotero.Zotero.JSONObjects.Collection;
 import javax.persistence.*;
-import java.io.Serializable;
 
 
 @Entity (name="collection")

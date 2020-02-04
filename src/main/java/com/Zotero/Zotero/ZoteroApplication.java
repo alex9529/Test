@@ -1,8 +1,8 @@
 package com.Zotero.Zotero;
 
 
-import com.Zotero.Zotero.API.Collection;
-import com.Zotero.Zotero.API.Item;
+import com.Zotero.Zotero.JSONObjects.Collection;
+import com.Zotero.Zotero.JSONObjects.Item;
 import com.Zotero.Zotero.SQL.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

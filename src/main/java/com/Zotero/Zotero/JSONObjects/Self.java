@@ -1,4 +1,4 @@
-package com.Zotero.Zotero.API;
+package com.Zotero.Zotero.JSONObjects;
 
 public class Self {
     private String href;
