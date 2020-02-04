@@ -5,15 +5,16 @@ import org.springframework.data.repository.CrudRepository;
 
 
 /**
- * Die Klasse ist für die 
+ * Die Klasse ist für die
  * * @author Alexander Nikolov
+ *
  *
  */
 
-public interface ItemTypeFieldsRepository extends CrudRepository<ItemCollectionSQL, String> {
+public interface ItemTypeFieldsRepository extends CrudRepository<ItemTypeFieldsSQL, String> {
 
-    ItemCollectionSQL findByCollectionKey(String collectionKey);
-    ItemCollectionSQL findByItemKey(String itemKey);
+    ItemCollectionSQL findByItemType(String itemType);
+
 }
 
 

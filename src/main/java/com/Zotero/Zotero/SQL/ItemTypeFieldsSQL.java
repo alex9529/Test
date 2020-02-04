@@ -4,17 +4,14 @@ import com.Zotero.Zotero.API.Item;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
-import java.io.Serializable;
-import java.util.LinkedList;
 
 
 @Entity (name="item_type_fields")
-@IdClass(ItemTypeFieldsSQL.class)
-public class ItemTypeFieldsSQL implements Serializable {
+public class ItemTypeFieldsSQL  {
 
 
     @Id
+    private String key;
     private String itemType;
     private String title;
     private String abstractNote;
@@ -33,7 +30,7 @@ public class ItemTypeFieldsSQL implements Serializable {
     private String extra;
     private String audioRecordingFormat;
     private String seriesTitle;
-    private String volume;
+    private int volume;
     private int numberOfVolumes;
     private String place;
     private String label;
@@ -83,11 +80,10 @@ public class ItemTypeFieldsSQL implements Serializable {
     private String applicationNumber;
     private String priorityNumbers;
     private String issueDate;
-    private String references;
+    private String reference;
     private String legalStatus;
     private String programTitle;
     private int episodeNumber;
-    private String audioRedordingFormat;
     private String network;
     private String reportNumber;
     private String institution;
@@ -104,7 +100,87 @@ public class ItemTypeFieldsSQL implements Serializable {
 
     public ItemTypeFieldsSQL(Item item)  {
 
-
+        this.key = item.getKey();
+        this.itemType = item.getData().getItemType();
+        this.title = item.getData().getTitle();
+        this.abstractNote = item.getData().getAbstractNote();
+        this.artworkMedium = item.getData().getArtworkMedium();
+        this.artworkSize = item.getData().getArtworkSize();
+        this.date = item.getData().getDate();
+        this.language = item.getData().getLanguage();
+        this.shortTitle = item.getData().getShortTitle();
+        this.archive = item.getData().getArchive();
+        this.archiveLocation = item.getData().getArchiveLocation();
+        this.libraryCatalog = item.getData().getLibraryCatalog();
+        this.callNumber = item.getData().getCallNumber();
+        this.url = item.getData().getUrl();
+        this.accessDate = item.getData().getAccessDate();
+        this.rights = item.getData().getRights();
+        this.extra = item.getData().getExtra();
+        this.audioRecordingFormat = item.getData().getAudioRecordingFormat();
+        this.seriesTitle = item.getData().getSeriesTitle();
+        this.volume = item.getData().getVolume();
+        this.numberOfVolumes = item.getData().getNumberOfVolumes();
+        this.place = item.getData().getPlace();
+        this.label = item.getData().getLabel();
+        this.runningTime = item.getData().getRunningTime();
+        this.ISBN = item.getData().getISBN();
+        this.billNumber = item.getData().getBillNumber();
+        this.code = item.getData().getCode();
+        this.codeVolume = item.getData().getCodeVolume();
+        this.section = item.getData().getSection();
+        this.codePages = item.getData().getCodePages();
+        this.legislativeBody = item.getData().getLegislativeBody();
+        this.session = item.getData().getSession();
+        this.history = item.getData().getHistory();
+        this.blogTitle = item.getData().getBlogTitle();
+        this.websiteType = item.getData().getWebsiteType();
+        this.series = item.getData().getSeries();
+        this.seriesNumber = item.getData().getSeriesNumber();
+        this.edition = item.getData().getEdition();
+        this.publisher = item.getData().getPublisher();
+        this.numPages = item.getData().getNumPages();
+        this.bookTitle = item.getData().getBookTitle();
+        this.proceedingsTitle = item.getData().getProceedingsTitle();
+        this.conferenceName = item.getData().getConferenceName();
+        this.DOI = item.getData().getDOI();
+        this.caseName = item.getData().getCaseName();
+        this.court = item.getData().getCourt();
+        this.dateDecided = item.getData().getDateDecided();
+        this.docketNumber = item.getData().getDocketNumber();
+        this.reporter = item.getData().getReporter();
+        this.reporterVolume = item.getData().getReporterVolume();
+        this.firstPage = item.getData().getFirstPage();
+        this.subject = item.getData().getSubject();
+        this.encyclopediaTitle = item.getData().getEncyclopediaTitle();
+        this.versionNumber = item.getData().getVersionNumber();
+        this.system = item.getData().getSystem();
+        this.company = item.getData().getCompany();
+        this.programmingLanguage = item.getData().getProgrammingLanguage();
+        this.interviewMedium = item.getData().getInterviewMedium();
+        this.publicationTitle = item.getData().getPublicationTitle();
+        this.journalAbbreviation = item.getData().getJournalAbbreviation();
+        this.manuscriptType = item.getData().getManuscriptType();
+        this.country = item.getData().getCountry();
+        this.assignee = item.getData().getAssignee();
+        this.issuingAuthority = item.getData().getIssuingAuthority();
+        this.patentNumber = item.getData().getPatentNumber();
+        this.filingDate = item.getData().getFilingDate();
+        this.applicationNumber = item.getData().getApplicationNumber();
+        this.priorityNumbers = item.getData().getPriorityNumbers();
+        this.issueDate = item.getData().getIssueDate();
+        this.reference = item.getData().getReferences();
+        this.legalStatus = item.getData().getLegalStatus();
+        this.programTitle = item.getData().getProgramTitle();
+        this.episodeNumber = item.getData().getEpisodeNumber();
+        this.network = item.getData().getNetwork();
+        this.reportNumber = item.getData().getReportNumber();
+        this.institution = item.getData().getInstitution();
+        this.thesisType = item.getData().getThesisType();
+        this.university = item.getData().getUniversity();
+        this.websiteTitle = item.getData().getWebsiteTitle();
+        this.ISSN = item.getData().getISSN();
+        this.seriesText = item.getData().getSeriesText();
 
 
 
