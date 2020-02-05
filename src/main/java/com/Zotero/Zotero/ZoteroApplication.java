@@ -37,19 +37,30 @@ public class ZoteroApplication {
 	}
 
 	@Bean
-	public CommandLineRunner run(RestTemplate restTemplate) throws Exception {
+	public CommandLineRunner GetSQLObjects(RestTemplate restTemplate) throws Exception {
 		return args -> {
-			Item item = restTemplate.getForObject(
-					"https://api.zotero.org/users/6098055/items/DWU7JMWB?key=NNb41PLF2hKJBKbo3tCtEJuO", Item.class);
 
-			Item itemBib = restTemplate.getForObject(
-					"https://api.zotero.org/users/6098055/items/DWU7JMWB?include=bib&key=NNb41PLF2hKJBKbo3tCtEJuO", Item.class);
+
+			//Item Call
+			//-------------------------------------
+			String user = "6098055";
+			String itemId = "DWU7JMWB";
+			String apiKey = "xbPF51FSc8hD7MhYKkBsgtpj";
+			String groupsOrUsers = "users";
+
+			APICalls apiCalls = new APICalls();
+
+			Item item = apiCalls.CallItem(restTemplate,user,itemId,apiKey,groupsOrUsers).get(0);
+			Item itemBib = apiCalls.CallItem(restTemplate,user,itemId,apiKey,groupsOrUsers).get(1);
+			itemSQL = new ItemSQL(item, itemBib);
+			//-------------------------------------
+
+
 
 
 			Collection collection = restTemplate.getForObject(
 					"https://api.zotero.org/users/6098055/collections/YPQC2LG5?key=NNb41PLF2hKJBKbo3tCtEJuO", Collection.class);
 
-			itemSQL = new ItemSQL(item, itemBib);
 
 			collectionSQL = new CollectionSQL(collection);
 			itemCollectionSQLList = new LinkedList<ItemCollectionSQL>();
@@ -77,8 +88,8 @@ public class ZoteroApplication {
 
 
 	@Bean
-	public CommandLineRunner demo(ItemRepository itemRepo, CollectionRepository collectionRepo, ItemCollectionRepository itemCollectionRepo,
-								  ItemTypeFieldsRepository itemTypeFieldsRepo, UserRepository userRepo, ItemAuthorRepository itemAuthorRepo, LibraryRepository libraryRepo) {
+	public CommandLineRunner SendToDB(ItemRepository itemRepo, CollectionRepository collectionRepo, ItemCollectionRepository itemCollectionRepo,
+									  ItemTypeFieldsRepository itemTypeFieldsRepo, UserRepository userRepo, ItemAuthorRepository itemAuthorRepo, LibraryRepository libraryRepo) {
 		return (args) -> {
 			itemRepo.save(itemSQL);
 			collectionRepo.save(collectionSQL);
@@ -90,7 +101,6 @@ public class ZoteroApplication {
 			for (int i = 0; i<itemAuthorSQLList.size(); i++) {
 				itemAuthorRepo.save(itemAuthorSQLList.get(i));
 			}
-
 
 			itemTypeFieldsRepo.save(itemTypeFieldsSQL);
 			userRepo.save(userSQL);

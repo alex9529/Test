@@ -4,6 +4,8 @@ import com.Zotero.Zotero.JSONObjects.Item;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
+import java.io.Serializable;
 
 
 @Entity (name="item_type_fields")
@@ -12,6 +14,7 @@ public class ItemTypeFieldsSQL  {
 
     @Id
     private String key;
+    private int libraryId;
     private String itemType;
     private String title;
     private String abstractNote;
@@ -30,8 +33,8 @@ public class ItemTypeFieldsSQL  {
     private String extra;
     private String audioRecordingFormat;
     private String seriesTitle;
-    private int volume;
-    private int numberOfVolumes;
+    private String volume;
+    private String numberOfVolumes;
     private String place;
     private String label;
     private String runningTime;
@@ -47,10 +50,10 @@ public class ItemTypeFieldsSQL  {
     private String blogTitle;
     private String websiteType;
     private String series;
-    private int seriesNumber;
-    private int edition;
+    private String seriesNumber;
+    private String edition;
     private String publisher;
-    private int numPages;
+    private String numPages;
     private String bookTitle;
     private String proceedingsTitle;
     private String conferenceName;
@@ -83,7 +86,7 @@ public class ItemTypeFieldsSQL  {
     private String reference;
     private String legalStatus;
     private String programTitle;
-    private int episodeNumber;
+    private String episodeNumber;
     private String network;
     private String reportNumber;
     private String institution;
@@ -101,6 +104,7 @@ public class ItemTypeFieldsSQL  {
     public ItemTypeFieldsSQL(Item item)  {
 
         this.key = item.getKey();
+        this.libraryId = item.getLibrary().getId();
         this.itemType = item.getData().getItemType();
         this.title = item.getData().getTitle();
         this.abstractNote = item.getData().getAbstractNote();
@@ -119,8 +123,14 @@ public class ItemTypeFieldsSQL  {
         this.extra = item.getData().getExtra();
         this.audioRecordingFormat = item.getData().getAudioRecordingFormat();
         this.seriesTitle = item.getData().getSeriesTitle();
-        this.volume = item.getData().getVolume();
-        this.numberOfVolumes = item.getData().getNumberOfVolumes();
+        this.volume = Integer.toString(item.getData().getVolume());
+        if (this.volume.equals("0")){
+            this.volume = null;
+        }
+        this.numberOfVolumes = Integer.toString(item.getData().getNumberOfVolumes());
+        if (this.numberOfVolumes.equals("0")){
+            this.numberOfVolumes = null;
+        }
         this.place = item.getData().getPlace();
         this.label = item.getData().getLabel();
         this.runningTime = item.getData().getRunningTime();
@@ -136,10 +146,19 @@ public class ItemTypeFieldsSQL  {
         this.blogTitle = item.getData().getBlogTitle();
         this.websiteType = item.getData().getWebsiteType();
         this.series = item.getData().getSeries();
-        this.seriesNumber = item.getData().getSeriesNumber();
-        this.edition = item.getData().getEdition();
+        this.seriesNumber = Integer.toString(item.getData().getSeriesNumber());
+        if (this.seriesNumber.equals("0")){
+            this.seriesNumber = null;
+        }
+        this.edition = Integer.toString(item.getData().getEdition());
+        if (this.edition.equals("0")){
+            this.edition = null;
+        }
         this.publisher = item.getData().getPublisher();
-        this.numPages = item.getData().getNumPages();
+        this.numPages = Integer.toString(item.getData().getNumPages());
+        if (this.numPages.equals("0")){
+            this.numPages = null;
+        }
         this.bookTitle = item.getData().getBookTitle();
         this.proceedingsTitle = item.getData().getProceedingsTitle();
         this.conferenceName = item.getData().getConferenceName();
@@ -172,7 +191,10 @@ public class ItemTypeFieldsSQL  {
         this.reference = item.getData().getReferences();
         this.legalStatus = item.getData().getLegalStatus();
         this.programTitle = item.getData().getProgramTitle();
-        this.episodeNumber = item.getData().getEpisodeNumber();
+        this.episodeNumber = Integer.toString(item.getData().getEpisodeNumber());
+        if (this.episodeNumber.equals("0")){
+            this.episodeNumber = null;
+        }
         this.network = item.getData().getNetwork();
         this.reportNumber = item.getData().getReportNumber();
         this.institution = item.getData().getInstitution();

@@ -13,7 +13,7 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface ItemTypeFieldsRepository extends CrudRepository<ItemTypeFieldsSQL, String> {
 
-    ItemCollectionSQL findByItemType(String itemType);
+    ItemCollectionSQL findByKey(String key);
 
 }
 
