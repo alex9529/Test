@@ -22,8 +22,9 @@ public class ZoteroApplication {
 	private CollectionSQL collectionSQL;
 	private LinkedList<ItemCollectionSQL> itemCollectionSQLList;
 	private ItemTypeFieldsSQL itemTypeFieldsSQL;
-	private UserOrProjectSQL userOrProjectSQL;
+	private UserSQL userSQL;
 	private LinkedList<ItemAuthorSQL> itemAuthorSQLList;
+	private LibrarySQL librarySQL;
 
 	private static final Logger log = LoggerFactory.getLogger(ZoteroApplication.class);
 	public static void main(String[] args) {
@@ -39,7 +40,7 @@ public class ZoteroApplication {
 	public CommandLineRunner run(RestTemplate restTemplate) throws Exception {
 		return args -> {
 			Item item = restTemplate.getForObject(
-					"https://api.zotero.org/users/6098055/items/56DQEYU6?key=NNb41PLF2hKJBKbo3tCtEJuO", Item.class);
+					"https://api.zotero.org/users/6098055/items/DWU7JMWB?key=NNb41PLF2hKJBKbo3tCtEJuO", Item.class);
 
 			Item itemBib = restTemplate.getForObject(
 					"https://api.zotero.org/users/6098055/items/DWU7JMWB?include=bib&key=NNb41PLF2hKJBKbo3tCtEJuO", Item.class);
@@ -65,7 +66,9 @@ public class ZoteroApplication {
 			}
 
 			itemTypeFieldsSQL = new ItemTypeFieldsSQL(item);
-			userOrProjectSQL = new UserOrProjectSQL(item);
+			userSQL = new UserSQL(item);
+			librarySQL = new LibrarySQL(item);
+
 
 
 			log.info(item.toString());
@@ -75,7 +78,7 @@ public class ZoteroApplication {
 
 	@Bean
 	public CommandLineRunner demo(ItemRepository itemRepo, CollectionRepository collectionRepo, ItemCollectionRepository itemCollectionRepo,
-								  ItemTypeFieldsRepository itemTypeFieldsRepo, UserOrProjectRepository userOrProjectRepo, ItemAuthorRepository itemAuthorRepo) {
+								  ItemTypeFieldsRepository itemTypeFieldsRepo, UserRepository userRepo, ItemAuthorRepository itemAuthorRepo, LibraryRepository libraryRepo) {
 		return (args) -> {
 			itemRepo.save(itemSQL);
 			collectionRepo.save(collectionSQL);
@@ -90,7 +93,9 @@ public class ZoteroApplication {
 
 
 			itemTypeFieldsRepo.save(itemTypeFieldsSQL);
-			userOrProjectRepo.save(userOrProjectSQL);
+			userRepo.save(userSQL);
+			libraryRepo.save(librarySQL);
+
 			log.info("");
 		};
 	}

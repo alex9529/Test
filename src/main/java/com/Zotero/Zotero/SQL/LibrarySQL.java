@@ -6,24 +6,24 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 
-@Entity (name="user_or_project")
-public class UserOrProjectSQL {
+@Entity (name="library")
+public class LibrarySQL {
 
 
     @Id
-    private int userProjectId;
+    private int libraryId;
     private String type;
-    private String name;
+    private String libraryName;
     private String libraryLink;
 
-    public UserOrProjectSQL() {
+    public LibrarySQL() {
     }
 
-    public UserOrProjectSQL(Item item)  {
+    public LibrarySQL(Item item)  {
 
-        this.userProjectId = item.getLibrary().getId();
+        this.libraryId = item.getLibrary().getId();
         this.type = item.getLibrary().getType();
-        this.name = item.getLibrary().getName();
+        this.libraryName = item.getLibrary().getName();
         this.libraryLink = item.getLibrary().getLinks().getAlternate().getHref();
 
 

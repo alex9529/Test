@@ -24,9 +24,9 @@ public class ItemSQL {
     @Id
     private String key;
     private int version;
-    private int userProjectId;
-    private String href;
-    private int creatorUserId;
+    private int libraryId;
+    private String itemLink;
+    private int createdBy;
     private String creatorSummary;
     private String parsedDate;
     private String parentItem;
@@ -46,15 +46,15 @@ public class ItemSQL {
     }
 
     public int getGroupOrUserId() {
-        return userProjectId;
+        return libraryId;
     }
 
-    public String getHref() {
-        return href;
+    public String getItemLink() {
+        return itemLink;
     }
 
-    public int getCreatorUserId() {
-        return creatorUserId;
+    public int getCreatedBy() {
+        return createdBy;
     }
 
     public String getCreatorSummary() {
@@ -92,11 +92,14 @@ public class ItemSQL {
 
             this.key = item.getKey();
             this.version = item.getVersion();
-            this.userProjectId = item.getLibrary().getId();
-            this.href = item.getLinks().getAlternate().getHref();
+            this.libraryId = item.getLibrary().getId();
+            this.itemLink = item.getLinks().getAlternate().getHref();
 
-            if (item.getLibrary().getType()=="group"){
-                this.creatorUserId = item.getMeta().getCreatedByUser().getId();
+            if (item.getLibrary().getType().equals("group")){
+                this.createdBy = item.getMeta().getCreatedByUser().getId();
+            }
+            else {
+                this.createdBy = this.libraryId;
             }
 
             this.creatorSummary = item.getMeta().getCreatorSummary();
