@@ -23,7 +23,7 @@ public class Data {
     private String parentItem;
     private String itemType;
     private String title;
-    private LinkedList<Creators> creators;
+    private LinkedList<Creators> creators = new LinkedList<Creators>();
     private String abstractNote;
     private String publicationTitle;
     private int volume;

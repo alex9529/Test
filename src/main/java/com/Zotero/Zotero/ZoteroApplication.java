@@ -23,6 +23,7 @@ public class ZoteroApplication {
 	private LinkedList<ItemCollectionSQL> itemCollectionSQLList;
 	private ItemTypeFieldsSQL itemTypeFieldsSQL;
 	private UserOrProjectSQL userOrProjectSQL;
+	private LinkedList<ItemAuthorSQL> itemAuthorSQLList;
 
 	private static final Logger log = LoggerFactory.getLogger(ZoteroApplication.class);
 	public static void main(String[] args) {
@@ -38,7 +39,7 @@ public class ZoteroApplication {
 	public CommandLineRunner run(RestTemplate restTemplate) throws Exception {
 		return args -> {
 			Item item = restTemplate.getForObject(
-					"https://api.zotero.org/users/6098055/items/DWU7JMWB?key=NNb41PLF2hKJBKbo3tCtEJuO", Item.class);
+					"https://api.zotero.org/users/6098055/items/56DQEYU6?key=NNb41PLF2hKJBKbo3tCtEJuO", Item.class);
 
 			Item itemBib = restTemplate.getForObject(
 					"https://api.zotero.org/users/6098055/items/DWU7JMWB?include=bib&key=NNb41PLF2hKJBKbo3tCtEJuO", Item.class);
@@ -51,29 +52,43 @@ public class ZoteroApplication {
 
 			collectionSQL = new CollectionSQL(collection);
 			itemCollectionSQLList = new LinkedList<ItemCollectionSQL>();
+			itemAuthorSQLList = new LinkedList<ItemAuthorSQL>();
+
+			//Loop through all collections that contain item
 			for (int i = 0; i<item.getData().getCollections().size(); i++){
 				itemCollectionSQLList.addFirst(new ItemCollectionSQL(item, i));
 			}
-			log.info(item.toString());
+
+			//Loop through all authors of an item
+				for (int i = 0; i<item.getData().getCreators().size(); i++){
+				itemAuthorSQLList.addFirst(new ItemAuthorSQL(item, i));
+			}
 
 			itemTypeFieldsSQL = new ItemTypeFieldsSQL(item);
 			userOrProjectSQL = new UserOrProjectSQL(item);
 
 
-
+			log.info(item.toString());
 		};
 	}
 
 
 	@Bean
 	public CommandLineRunner demo(ItemRepository itemRepo, CollectionRepository collectionRepo, ItemCollectionRepository itemCollectionRepo,
-								  ItemTypeFieldsRepository itemTypeFieldsRepo, UserOrProjectRepository userOrProjectRepo) {
+								  ItemTypeFieldsRepository itemTypeFieldsRepo, UserOrProjectRepository userOrProjectRepo, ItemAuthorRepository itemAuthorRepo) {
 		return (args) -> {
 			itemRepo.save(itemSQL);
 			collectionRepo.save(collectionSQL);
+
 			for (int i = 0; i<itemCollectionSQLList.size(); i++) {
 				itemCollectionRepo.save(itemCollectionSQLList.get(i));
 			}
+
+			for (int i = 0; i<itemAuthorSQLList.size(); i++) {
+				itemAuthorRepo.save(itemAuthorSQLList.get(i));
+			}
+
+
 			itemTypeFieldsRepo.save(itemTypeFieldsSQL);
 			userOrProjectRepo.save(userOrProjectSQL);
 			log.info("");
