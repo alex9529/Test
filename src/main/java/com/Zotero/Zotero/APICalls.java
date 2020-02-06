@@ -1,5 +1,6 @@
 package com.Zotero.Zotero;
 
+import com.Zotero.Zotero.JSONObjects.Collection;
 import com.Zotero.Zotero.JSONObjects.Item;
 import org.springframework.web.client.RestTemplate;
 
@@ -81,6 +82,29 @@ public class APICalls {
         return itemList;
     }
 
+    public LinkedList<Collection> CallAllCollections(RestTemplate restTemplate, String libraryId, String apiKey, String groupOrUser) {
+
+        String address = "https://api.zotero.org/{groupOrUser}/{id}/collections/?key={apiKey}";
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("groupOrUser", groupOrUser);
+        map.put("id", libraryId);
+        map.put("apiKey", apiKey);
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            address = address.replace("{" + entry.getKey() + "}", entry.getValue());
+        }
+
+
+        Collection[] collections =  (restTemplate.getForObject(
+                address, Collection[].class));
+        LinkedList<Collection> collectionList = new LinkedList<Collection>(Arrays.asList(collections));
+
+        for (int k = 0; k<collectionList.size(); k++){
+            collectionList.set(k,CallCollection(restTemplate,libraryId,collections[k].getKey(),apiKey,groupOrUser));
+
+        }
+
+        return collectionList;
+    }
 
     public LinkedList<String> GetAllItemIds(RestTemplate restTemplate, String libraryId, String apiKey, String groupOrUser) {
 
@@ -107,5 +131,50 @@ public class APICalls {
 
         return idList;
     }
+
+    public Collection CallCollection(RestTemplate restTemplate, String libraryId, String collectionId, String apiKey, String groupOrUser) {
+
+
+        String address = "https://api.zotero.org/{groupOrUser}/{id}/collections/{collectionId}?key={apiKey}";
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("groupOrUser", groupOrUser);
+        map.put("id", libraryId);
+        map.put("collectionId", collectionId);
+        map.put("apiKey", apiKey);
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            address = address.replace("{" + entry.getKey() + "}", entry.getValue());
+        }
+
+        Collection collection = restTemplate.getForObject(
+                address, Collection.class);
+        return (collection);
+    }
+
+    public LinkedList<String> GetAllCollectionIds(RestTemplate restTemplate, String libraryId, String apiKey, String groupOrUser) {
+
+
+        String address = "https://api.zotero.org/{groupOrUser}/{id}/collections/?key={apiKey}";
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("groupOrUser", groupOrUser);
+        map.put("id", libraryId);
+        map.put("apiKey", apiKey);
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            address = address.replace("{" + entry.getKey() + "}", entry.getValue());
+        }
+
+
+        Collection[] collections =  (restTemplate.getForObject(
+                address, Collection[].class));
+        LinkedList<Collection> collectionList = new LinkedList<Collection>(Arrays.asList(collections));
+        LinkedList<String> idList = new LinkedList<>();
+
+        for (int k = 0; k<collectionList.size(); k++){
+            idList.add(k,collectionList.get(k).getCollectionKey());
+
+        }
+
+        return idList;
+    }
+
 
 }

@@ -22,6 +22,7 @@ public class ZoteroApplication {
 
 	private ItemSQL itemSQL;
 	private LinkedList<ItemSQL> itemSQLList = new LinkedList<ItemSQL>();
+	private LinkedList<CollectionSQL> collectionSQList = new LinkedList<CollectionSQL>();
 	private CollectionSQL collectionSQL;
 	private LinkedList<ItemCollectionSQL> itemCollectionSQLList;
 	private ItemTypeFieldsSQL itemTypeFieldsSQL;
@@ -46,13 +47,13 @@ public class ZoteroApplication {
 
 			APICalls apiCalls = new APICalls();
 			String libraryId = "2407208";
-			String apiKey = "";
-			String groupsOrUsers = "groups";
+			String apiKey = "NNb41PLF2hKJBKbo3tCtEJuO";
+			String groupOrUser = "groups";
 
 
 			//Get all Items from the Library
 			//-------------------------------------
-			LinkedList<Item> items = apiCalls.CallAllItems(restTemplate, libraryId, apiKey,groupsOrUsers);
+			LinkedList<Item> items = apiCalls.CallAllItems(restTemplate, libraryId, apiKey,groupOrUser);
 			for (int k = 0; k<items.size(); k++){
 				itemSQLList.add(new ItemSQL(items.get(k)));
 			}
@@ -61,25 +62,44 @@ public class ZoteroApplication {
 
 			//Get all Item Ids in the library
 			//-------------------------------------
-			LinkedList<String> idList = apiCalls.GetAllItemIds(restTemplate,libraryId,apiKey,groupsOrUsers);
+			LinkedList<String> idList = apiCalls.GetAllItemIds(restTemplate,libraryId,apiKey,groupOrUser);
 			//-------------------------------------
 
 
 			//Get a specific item
 			//-------------------------------------
 			String itemId = idList.get(1);
-			Item item = apiCalls.CallItem(restTemplate,libraryId,itemId,apiKey,groupsOrUsers);
+			Item item = apiCalls.CallItem(restTemplate,libraryId,itemId,apiKey,groupOrUser);
 			itemSQL = new ItemSQL(item);
+			//-------------------------------------
+
+
+			//Get all Collections Ids in the library
+			//-------------------------------------
+			LinkedList<String> collectionIds = apiCalls.GetAllCollectionIds(restTemplate,libraryId,apiKey,groupOrUser);
+			//-------------------------------------
+
+
+			//Get all Collecitons in the library
+			//-------------------------------------
+			LinkedList<Collection> collections = apiCalls.CallAllCollections(restTemplate, libraryId, apiKey,groupOrUser);
+			for (int k = 0; k<collections.size(); k++){
+				collectionSQList.add(new CollectionSQL(collections.get(k)));
+			}
+			//-------------------------------------
+
+
+			//Get a specific collection
+			//-------------------------------------
+			String collectionId = collectionIds.get(0);
+			Collection collection = apiCalls.CallCollection(restTemplate,libraryId,collectionId,apiKey,groupOrUser);
+			collectionSQL = new CollectionSQL(collection);
 			//-------------------------------------
 
 
 
 
-			Collection collection = restTemplate.getForObject(
-					"https://api.zotero.org/users/6098055/collections/YPQC2LG5?key=NNb41PLF2hKJBKbo3tCtEJuO", Collection.class);
 
-
-			collectionSQL = new CollectionSQL(collection);
 			itemCollectionSQLList = new LinkedList<ItemCollectionSQL>();
 			itemAuthorSQLList = new LinkedList<ItemAuthorSQL>();
 
