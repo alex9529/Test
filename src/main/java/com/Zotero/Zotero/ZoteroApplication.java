@@ -46,9 +46,9 @@ public class ZoteroApplication {
 
 
 			APICalls apiCalls = new APICalls();
-			String libraryId = "2407208";
+			String libraryId = "6098055";
 			String apiKey = "NNb41PLF2hKJBKbo3tCtEJuO";
-			String groupOrUser = "groups";
+			String groupOrUser = "users";
 
 
 			//Get all Items from the Library
@@ -98,8 +98,6 @@ public class ZoteroApplication {
 
 
 
-
-
 			itemCollectionSQLList = new LinkedList<ItemCollectionSQL>();
 			itemAuthorSQLList = new LinkedList<ItemAuthorSQL>();
 
@@ -130,32 +128,19 @@ public class ZoteroApplication {
 		return (args) -> {
 			SQLActions sqlActions = new SQLActions();
 
-
-			itemRepo.save(itemSQL);
-
-			for (int k = 0; k<itemSQLList.size(); k++){
-				itemRepo.save(itemSQLList.get(k));
-			}
-
-
-			collectionRepo.save(collectionSQL);
-
-			for (int i = 0; i<itemCollectionSQLList.size(); i++) {
-				itemCollectionRepo.save(itemCollectionSQLList.get(i));
-			}
-
-			for (int i = 0; i<itemAuthorSQLList.size(); i++) {
-				itemAuthorRepo.save(itemAuthorSQLList.get(i));
-			}
-
-			itemTypeFieldsRepo.save(itemTypeFieldsSQL);
-			libraryRepo.save(librarySQL);
-
-
 			sqlActions.saveUser(userSQL, userRepo);
+			sqlActions.saveItem(itemRepo,collectionRepo,itemCollectionRepo,itemTypeFieldsRepo,itemAuthorRepo,libraryRepo, itemAuthorRepo,
+					itemSQL, collectionSQL, itemCollectionSQLList, itemTypeFieldsSQL, librarySQL, itemAuthorSQLList);
+
+
+
+			for (int k = 0; k<itemSQLList.size(); k++) {
+
+				sqlActions.saveItem(itemRepo, collectionRepo,itemCollectionRepo,itemTypeFieldsRepo,itemAuthorRepo,libraryRepo, itemAuthorRepo,
+						itemSQLList.get(k), collectionSQL, itemCollectionSQLList, itemTypeFieldsSQL, librarySQL, itemAuthorSQLList);
+			}
 
 			log.info("");
 		};
 	}
-
 }
