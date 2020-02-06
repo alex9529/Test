@@ -25,7 +25,9 @@ public class Item {
         return bib;
     }
 
-
+    public void setBib(String bib) {
+        this.bib = bib;
+    }
 
     public int getVersion() {
         return version;

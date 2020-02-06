@@ -2,7 +2,9 @@ package com.Zotero.Zotero.SQL;
 import org.springframework.data.repository.CrudRepository;
 
 
-public interface ItemAuthorRepository extends CrudRepository<ItemAuthorSQL, Integer> {
+public interface ItemAuthorRepository extends CrudRepository<ItemAuthorSQL, String> {
 
-    ItemAuthorSQL findByItemAuthorId(Integer itemAuthorId);
+    ItemAuthorSQL findByItemKey(String itemKey);
+
+
 }

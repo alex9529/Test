@@ -1,0 +1,151 @@
+CREATE TABLE "item" (
+  "key" VARCHAR,
+  "library_id" int,
+  "version" int,
+  "item_link" VARCHAR,
+  "created_by" int,
+  "creator_summary" VARCHAR,
+  "parsed_date" VARCHAR,
+  "parent_item" VARCHAR,
+  "item_type" VARCHAR,
+  "access_date" VARCHAR,
+  "archive" VARCHAR,
+  "archive_location" VARCHAR,
+  "bib" VARCHAR,
+   PRIMARY KEY (key, library_id)
+);
+
+
+CREATE TABLE "collection" (
+  "collection_key" VARCHAR,
+  "version" INT,
+  "user_project_id" VARCHAR,
+  "links_self_href" VARCHAR,
+  "num_items" INT,
+  "num_collections" INT,
+  "name" VARCHAR,
+  "parent_collection_key" VARCHAR,
+  PRIMARY KEY (collection_key)
+
+);
+
+CREATE TABLE "item_collection" (
+  "item_key" VARCHAR,
+  "collection_key" VARCHAR,
+  PRIMARY KEY (collection_key, item_key)
+);
+
+
+CREATE TABLE "users" (
+  "user_id" INT,
+  "username" VARCHAR,
+  "user_link" VARCHAR,
+  PRIMARY KEY (user_id)
+);
+
+CREATE TABLE "library" (
+  "library_id" int,
+  "type" VARCHAR,
+  "library_name" VARCHAR,
+  "library_link" VARCHAR,
+   PRIMARY KEY (library_id)
+);
+
+CREATE TABLE "item_author" (
+  "item_author_id" INT GENERATED ALWAYS AS IDENTITY,
+  "item_key" VARCHAR,
+  "library_id" INT,
+  "creator_type" VARCHAR,
+  "first_name" VARCHAR,
+  "last_name" VARCHAR,
+  "name" VARCHAR,
+   PRIMARY KEY (item_author_id)
+);
+
+CREATE TABLE "item_type_fields" (
+  "key" varchar,
+  "library_id" int,
+  "item_type" varchar,
+  "title" varchar,
+  "abstract_note" varchar,
+  "artwork_medium" varchar,
+  "artwork_size" varchar,
+  "date" varchar,
+  "language" varchar,
+  "short_title" varchar,
+  "archive" varchar,
+  "archive_location" varchar,
+  "library_catalog" varchar,
+  "call_number" varchar,
+  "url" varchar,
+  "access_date" varchar,
+  "rights" varchar,
+  "extra" varchar,
+  "conference_name" varchar,
+  "audio_recording_format" varchar,
+  "series_title" varchar,
+  "volume" int,
+  "number_of_volumes" int,
+  "place" varchar,
+  "label" varchar,
+  "running_time" varchar,
+  "isbn" varchar,
+  "bill_number" varchar,
+  "code" varchar,
+  "code_volume" varchar,
+  "section" varchar,
+  "code_pages" varchar,
+  "legislative_body" varchar,
+  "session" varchar,
+  "history" varchar,
+  "blog_title" varchar,
+  "website_type" varchar,
+  "series" varchar,
+  "series_number" int,
+  "edition" int,
+  "publisher" varchar,
+  "num_pages" int,
+  "book_title" varchar,
+  "proceedings_title" varchar,
+  "confierence_name" varchar,
+  "doi" varchar,
+  "case_name" varchar,
+  "court" varchar,
+  "date_decided" varchar,
+  "docket_number" varchar,
+  "reporter" varchar,
+  "reporter_volume" varchar,
+  "first_page" varchar,
+  "subject" varchar,
+  "encyclopedia_title" varchar,
+  "version_number" varchar,
+  "system" varchar,
+  "company" varchar,
+  "programming_language" varchar,
+  "interview_medium" varchar,
+  "publication_title" varchar,
+  "journal_abbreviation" varchar,
+  "manuscript_type" varchar,
+  "country" varchar,
+  "assignee" varchar,
+  "issuing_authority" varchar,
+  "patent_number" varchar,
+  "filing_date" varchar,
+  "application_number" varchar,
+  "priority_numbers" varchar,
+  "issue_date" varchar,
+  "reference" varchar,
+  "legal_status" varchar,
+  "program_title" varchar,
+  "episode_number" int,
+  "network" varchar,
+  "report_number" varchar,
+  "institution" varchar,
+  "thesis_type" varchar,
+  "university" varchar,
+  "website_title" varchar,
+  "issn" varchar,
+  "series_text" varchar,
+  primary key (key, library_id)
+);
+

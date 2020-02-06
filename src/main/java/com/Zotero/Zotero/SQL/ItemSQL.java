@@ -88,7 +88,7 @@ public class ItemSQL {
 
     protected ItemSQL() {}
 
-    public ItemSQL(Item item, Item bibItem) {
+    public ItemSQL(Item item) {
 
             this.key = item.getKey();
             this.version = item.getVersion();
@@ -109,7 +109,7 @@ public class ItemSQL {
             this.accessDate = item.getData().getAccessDate();
             this.archive = item.getData().getArchive();
             this.archiveLocation = item.getData().getArchiveLocation();
-            this.bib = bibItem.getBib();
+            this.bib = item.getBib();
     }
 
 
