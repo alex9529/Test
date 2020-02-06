@@ -32,8 +32,6 @@ public class APICalls {
             address = address.replace("{" + entry.getKey() + "}", entry.getValue());
         }
 
-
-
         String bibAddress = "https://api.zotero.org/{groupOrUser}/{id}/items/{itemId}?include=bib&key={apiKey}";
         map = new HashMap<String, String>();
         map.put("groupOrUser", groupOrUser);
@@ -43,8 +41,6 @@ public class APICalls {
         for (Map.Entry<String, String> entry : map.entrySet()) {
             bibAddress = bibAddress.replace("{" + entry.getKey() + "}", entry.getValue());
         }
-
-
 
         Item item = restTemplate.getForObject(
                 address, Item.class);

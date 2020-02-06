@@ -35,10 +35,6 @@ public class ZoteroApplication {
 		SpringApplication.run(ZoteroApplication.class, args);
 	}
 
-	@Bean
-	public RestTemplate restTemplate(RestTemplateBuilder builder) {
-		return builder.build();
-	}
 
 	@Bean
 	public CommandLineRunner GetSQLObjects(RestTemplate restTemplate) throws Exception {
