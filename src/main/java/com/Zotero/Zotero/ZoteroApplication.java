@@ -4,6 +4,7 @@ package com.Zotero.Zotero;
 import com.Zotero.Zotero.JSONObjects.Collection;
 import com.Zotero.Zotero.JSONObjects.Item;
 import com.Zotero.Zotero.SQL.*;
+import net.bytebuddy.dynamic.scaffold.MethodGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -13,12 +14,14 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
+
 import java.util.LinkedList;
 
 @SpringBootApplication
 public class ZoteroApplication {
 
 	private ItemSQL itemSQL;
+	private LinkedList<ItemSQL> itemSQLList = new LinkedList<ItemSQL>();
 	private CollectionSQL collectionSQL;
 	private LinkedList<ItemCollectionSQL> itemCollectionSQLList;
 	private ItemTypeFieldsSQL itemTypeFieldsSQL;
@@ -41,18 +44,32 @@ public class ZoteroApplication {
 		return args -> {
 
 
+			APICalls apiCalls = new APICalls();
+			String libraryId = "2407208";
+			String apiKey = "";
+			String groupsOrUsers = "groups";
+
+
+			//All Items Call
+			//-------------------------------------
+			LinkedList<Item> items = apiCalls.CallAllItems(restTemplate, libraryId, apiKey,groupsOrUsers);
+			for (int k = 0; k<items.size(); k++){
+				itemSQLList.add(new ItemSQL(items.get(k)));
+			}
+			//-------------------------------------
+
+
+			//Get all Item Ids in the library
+			//-------------------------------------
+			LinkedList<String> idList = apiCalls.GetAllItemIds(restTemplate,libraryId,apiKey,groupsOrUsers);
+			//-------------------------------------
+
+
 			//Item Call
 			//-------------------------------------
-			String user = "6098055";
-			String itemId = "DWU7JMWB";
-			String apiKey = "xbPF51FSc8hD7MhYKkBsgtpj";
-			String groupsOrUsers = "users";
-
-			APICalls apiCalls = new APICalls();
-
-			Item item = apiCalls.CallItem(restTemplate,user,itemId,apiKey,groupsOrUsers).get(0);
-			Item itemBib = apiCalls.CallItem(restTemplate,user,itemId,apiKey,groupsOrUsers).get(1);
-			itemSQL = new ItemSQL(item, itemBib);
+			String itemId = idList.get(1);
+			Item item = apiCalls.CallItem(restTemplate,libraryId,itemId,apiKey,groupsOrUsers);
+			itemSQL = new ItemSQL(item);
 			//-------------------------------------
 
 
@@ -92,6 +109,12 @@ public class ZoteroApplication {
 									  ItemTypeFieldsRepository itemTypeFieldsRepo, UserRepository userRepo, ItemAuthorRepository itemAuthorRepo, LibraryRepository libraryRepo) {
 		return (args) -> {
 			itemRepo.save(itemSQL);
+
+			for (int k = 0; k<itemSQLList.size(); k++){
+				itemRepo.save(itemSQLList.get(k));
+			}
+
+
 			collectionRepo.save(collectionSQL);
 
 			for (int i = 0; i<itemCollectionSQLList.size(); i++) {
