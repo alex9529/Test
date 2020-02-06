@@ -50,7 +50,7 @@ public class ZoteroApplication {
 			String groupsOrUsers = "groups";
 
 
-			//All Items Call
+			//Get all Items from the Library
 			//-------------------------------------
 			LinkedList<Item> items = apiCalls.CallAllItems(restTemplate, libraryId, apiKey,groupsOrUsers);
 			for (int k = 0; k<items.size(); k++){
@@ -65,7 +65,7 @@ public class ZoteroApplication {
 			//-------------------------------------
 
 
-			//Item Call
+			//Get a specific item
 			//-------------------------------------
 			String itemId = idList.get(1);
 			Item item = apiCalls.CallItem(restTemplate,libraryId,itemId,apiKey,groupsOrUsers);
@@ -108,6 +108,9 @@ public class ZoteroApplication {
 	public CommandLineRunner SendToDB(ItemRepository itemRepo, CollectionRepository collectionRepo, ItemCollectionRepository itemCollectionRepo,
 									  ItemTypeFieldsRepository itemTypeFieldsRepo, UserRepository userRepo, ItemAuthorRepository itemAuthorRepo, LibraryRepository libraryRepo) {
 		return (args) -> {
+			SQLActions sqlActions = new SQLActions();
+
+
 			itemRepo.save(itemSQL);
 
 			for (int k = 0; k<itemSQLList.size(); k++){
@@ -126,8 +129,10 @@ public class ZoteroApplication {
 			}
 
 			itemTypeFieldsRepo.save(itemTypeFieldsSQL);
-			userRepo.save(userSQL);
 			libraryRepo.save(librarySQL);
+
+
+			sqlActions.saveUser(userSQL, userRepo);
 
 			log.info("");
 		};
