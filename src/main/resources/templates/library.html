@@ -19,12 +19,13 @@
 
 
 <div class="center">
-
+        <p th:text="'Benutzer/Gruppe ID: ' + ${id} + '.'" />
+        <a href="/index.html">Bibliothek wechseln</a>
         <h1 align="center">
             Zotero API to PSQL
         </h1>
 
-        <p th:text="'Benutzer/Gruppe ID: ' + ${id} + '.'" />
+
 
         <button onclick="viewItems()">Alle Items in der Bibliothek anzeigen</button>
         <br> <br>
