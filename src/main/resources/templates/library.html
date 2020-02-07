@@ -11,10 +11,10 @@
     .center {
         margin: auto;
         width: 60%;
-        height: 800px;
+        height: 950px;
         background-color: #4379a5;
         color: white;
-        padding: 100px;
+        padding: 20px;
     }
 </style>
 
@@ -34,7 +34,7 @@
         <br> <br>
         <button onclick="syncItems()">Alle Items mit der Datenbank synchronisieren</button>
         <br> <br>
-        <button onclick="syncFromCollection(collectionId)">Alle Items aus der Collection mit der Datenbank synchronisieren</button>
+        <button onclick="syncFromCollection()">Alle Items aus einer Collection mit der Datenbank synchronisieren</button>
         <input type="collection" name="collectionId" placeholder="Collection Key">
         <br> <br>
         <iframe id="myFrame" src="https://api.zotero.org/" width="100%" height= 600px style="background-color: white" hidden>
@@ -43,6 +43,7 @@
         <script th:inline="javascript">
             function viewItems() {
                 var id = /*[[${id}]]*/ 'default';
+
                 document.getElementById("myFrame").src = "https://api.zotero.org/groups/" + id + "/items/";
                 document.getElementById("myFrame").hidden = false;
             }
@@ -57,7 +58,7 @@
 
             }
 
-            function syncFromCollection(String collectionId) {
+            function syncFromCollection() {
 
             }
 
