@@ -12,8 +12,9 @@ public class LoginController {
     public class LibraryController {
 
         @GetMapping("/library")
-        public String library(@RequestParam(name="id", required=false, defaultValue="World") String id, Model model) {
+        public String library(@RequestParam(name="id", required=true, defaultValue="0000000") String id, Model model) {
             model.addAttribute("id", id);
+
             return "library";
         }
 
