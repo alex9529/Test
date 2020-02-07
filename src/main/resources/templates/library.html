@@ -2,73 +2,72 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-        <title>Zotero Sync Tool- Library</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Zotero Sync Tool- Library</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
 
 <style>
-        .center {
-                margin: auto;
-                width: 60%;
-                height: 950px;
-                background-color: #4379a5;
-                color: white;
-                padding: 20px;
-        }
+    .center {
+        margin: auto;
+        width: 60%;
+        height: 950px;
+        background-color: #4379a5;
+        color: white;
+        padding: 20px;
+    }
 </style>
 
 
 <div class="center">
-        <p th:text="'Benutzer/Gruppe ID: ' + ${id}" />
+    <p th:text="'Benutzer/Gruppe ID: ' + ${id}"/>
 
-        <p th:text="'API Key: ' + ${apiKey}" />
-        <a href="/index.html" style = "color: white">Bibliothek wechseln</a>
-        <h1 align="center">
-                Zotero Sync Tool
-        </h1>
+    <p th:text="'API Key: ' + ${apiKey}"/>
+    <a href="/index.html" style="color: white">Bibliothek wechseln</a>
+    <h1 align="center">
+        Zotero Sync Tool
+    </h1>
 
 
+    <button onclick="viewItems()">Alle Items aus der Bibliothek anzeigen</button>
+    <br> <br>
+    <button onclick="viewCollections()">Alle Collections aus der Bibliothek anzeigen</button>
+    <br> <br>
+    <button onclick="syncItems()">Alle Items mit der Datenbank synchronisieren</button>
+    <br> <br>
+    <button onclick="syncFromCollection()">Alle Items aus einer Collection mit der Datenbank synchronisieren</button>
+    <input type="collection" name="collectionId" placeholder="Collection Key">
+    <br> <br>
+    <iframe id="myFrame" src="https://api.zotero.org/" width="100%" height=600px style="background-color: white" hidden>
+    </iframe>
 
-        <button onclick="viewItems()">Alle Items aus der Bibliothek anzeigen</button>
-        <br> <br>
-        <button onclick="viewCollections()">Alle Collections aus der Bibliothek anzeigen</button>
-        <br> <br>
-        <button onclick="syncItems()">Alle Items mit der Datenbank synchronisieren</button>
-        <br> <br>
-        <button onclick="syncFromCollection()">Alle Items aus einer Collection mit der Datenbank synchronisieren</button>
-        <input type="collection" name="collectionId" placeholder="Collection Key">
-        <br> <br>
-        <iframe id="myFrame" src="https://api.zotero.org/" width="100%" height= 600px style="background-color: white" hidden>
-        </iframe>
+    <script th:inline="javascript">
+        function viewItems() {
+            var id = /*[[${id}]]*/ 'default';
+            var apiKey = /*[[${apiKey}]]*/ 'default';
+            var groupOrUser = /*[[${groupOrUser}]]*/ 'default';
 
-        <script th:inline="javascript">
-                function viewItems() {
-                        var id = /*[[${id}]]*/ 'default';
-                        var apiKey = /*[[${apiKey}]]*/ 'default';
-                        var groupOrUser = /*[[${groupOrUser}]]*/ 'default';
+            document.getElementById("myFrame").src = "https://api.zotero.org/" + groupOrUser + "/" + id + "/items/?key=" + apiKey;
+            document.getElementById("myFrame").hidden = false;
+        }
 
-                        document.getElementById("myFrame").src = "https://api.zotero.org/"+ groupOrUser + "/" + id + "/items/?key="+ apiKey;
-                        document.getElementById("myFrame").hidden = false;
-                }
+        function viewCollections() {
+            var id = /*[[${id}]]*/ 'default';
+            var apiKey = /*[[${apiKey}]]*/ 'default';
+            var groupOrUser = /*[[${groupOrUser}]]*/ 'default';
+            document.getElementById("myFrame").src = "https://api.zotero.org/" + groupOrUser + "/" + id + "/collections/?key=" + apiKey;
+            document.getElementById("myFrame").hidden = false;
+        }
 
-                function viewCollections() {
-                        var id = /*[[${id}]]*/ 'default';
-                        var apiKey = /*[[${apiKey}]]*/ 'default';
-                        var groupOrUser = /*[[${groupOrUser}]]*/ 'default';
-                        document.getElementById("myFrame").src =  "https://api.zotero.org/"+ groupOrUser + "/" + id + "/collections/?key="+ apiKey;
-                        document.getElementById("myFrame").hidden = false;
-                }
+        function syncItems() {
 
-                function syncItems() {
+        }
 
-                }
+        function syncFromCollection() {
 
-                function syncFromCollection() {
+        }
 
-                }
-
-        </script>
+    </script>
 
 </div>
 </body>
