@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class LoginController {
 
     @Controller
-    public class GreetingController {
+    public class LibraryController {
 
-        @GetMapping("/greeting")
-        public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name, Model model) {
-            model.addAttribute("name", name);
-            return "greeting";
+        @GetMapping("/library")
+        public String library(@RequestParam(name="id", required=false, defaultValue="World") String id, Model model) {
+            model.addAttribute("id", id);
+            return "library";
         }
 
     }

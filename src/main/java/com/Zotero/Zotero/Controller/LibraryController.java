@@ -15,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.LinkedList;
 
 @Controller
-public class GreetingController {
+public class LibraryController {
 
 
 	@Bean
@@ -23,8 +23,8 @@ public class GreetingController {
 		return builder.build();
 	}
 
-	@GetMapping("/greeting")
-	public String greeting(@RequestParam(name="name", required=false, defaultValue="Undefined") String name, Model model,RestTemplate restTemplate) {
+	@GetMapping("/library")
+	public String library(@RequestParam(name="id", required=false, defaultValue="Undefined") String id, Model model, RestTemplate restTemplate) {
 
 
 		APICalls apiCalls = new APICalls();
@@ -45,10 +45,10 @@ public class GreetingController {
 
 
 
-		model.addAttribute("id", name);
+		model.addAttribute("id", id);
 		model.addAttribute("items", items);
 
-		return "greeting";
+		return "library";
 	}
 
 }

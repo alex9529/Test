@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Zotero API to PSQL - Library</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+<style>
+    .center {
+        margin: auto;
+        width: 60%;
+        height: 800px;
+        border: 3px solid #4379a5;
+        padding: 100px;
+    }
+</style>
+
+
+<div class="center">
+
+        <h1 align="center">
+            Zotero API to PSQL
+        </h1>
+
+        <p th:text="'Benutzer/Gruppe ID: ' + ${id} + '.'" />
+
+        <button onclick="viewItems()">Alle Items in der Bibliothek anzeigen</button>
+        <br> <br>
+        <button onclick="viewCollections()">Alle Collections in der Bibliothek anzeigen</button>
+        <br> <br>
+        <button onclick="syncItems()">Alle Items mit der Datenbank synchronisieren</button>
+        <br> <br>
+        <iframe id="myFrame" src="https://api.zotero.org/" width="100%" height= 650px>
+        </iframe>
+
+        <script th:inline="javascript">
+            function viewItems() {
+                var id = /*[[${id}]]*/ 'default';
+                document.getElementById("myFrame").src = "https://api.zotero.org/groups/" + id + "/items/";
+            }
+
+            function viewCollections() {
+                var id = /*[[${id}]]*/ 'default';
+                document.getElementById("myFrame").src = "https://api.zotero.org/groups/" + id + "/collections/";
+            }
+
+            function syncItems() {
+
+            }
+        </script>
+
+    </div>
+</body>
+</html>

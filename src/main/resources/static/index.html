@@ -1,23 +1,46 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-    <title>Zotero API to PSQL - Home</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-</head>
-<body>
+            <!DOCTYPE HTML>
+            <html>
+            <head>
+                <title>Zotero API to PSQL - Home</title>
+                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            </head>
+            <body>
 
-<style>
-    .center {
-        margin: auto;
-        width: 60%;
-        border: 3px solid #4379a5;
-        padding: 100px;
-    }
-</style>
 
-<div class="center">
-    <p>Nutzer/Gruppen ID eingeben: <a href="/greeting">Einloggen</a></p>
-</div>
 
-</body>
-</html>
+            <style>
+                .center {
+                    margin: auto;
+                    width: 60%;
+                    border: 3px solid #4379a5;
+                    padding: 50px;
+                }
+            </style>
+
+
+
+
+            <div class="center">
+                <h1 align="center">
+                    Zotero API to PSQL
+                </h1>
+                <div>
+                    <form action="/library" target="_blank" method="get">
+                        <br>
+                        ID eingeben:
+                        <br>
+                        <input type="text" name="id" required>
+                        <br><br>
+                        Falls notwendig, API Key eingeben:
+                        <br>
+                        <input type="password" name="apiKey">
+                        <br><br>
+                        Ist dies eine geteilte Bibliothek?
+                        <input type="checkbox" name="group">
+                        <br><br>
+                        <input type="submit" value="Bibliothek anzeigen">
+                    </form>
+                </div>
+            </div>
+            </body>
+            </html>
