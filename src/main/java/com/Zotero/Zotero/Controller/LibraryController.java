@@ -26,7 +26,8 @@ public class LibraryController {
 	@GetMapping("/library")
 	public String library(@RequestParam(name="id", required=false, defaultValue="") String id,
 						  @RequestParam(name="apiKey", required=false, defaultValue="") String apiKey,
-						  @RequestParam(name="group", required=false, defaultValue="off") String groupOrUser, Model model, RestTemplate restTemplate) {
+						  @RequestParam(name="group", required=false, defaultValue="off") String groupOrUser,
+						  Model model, RestTemplate restTemplate) {
 
 
 		APICalls apiCalls = new APICalls();
