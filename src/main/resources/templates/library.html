@@ -2,29 +2,30 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Zotero Sync Tool - Library</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Zotero Sync Tool- Library</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
 
 <style>
-    .center {
-        margin: auto;
-        width: 60%;
-        height: 950px;
-        background-color: #4379a5;
-        color: white;
-        padding: 20px;
-    }
+        .center {
+                margin: auto;
+                width: 60%;
+                height: 950px;
+                background-color: #4379a5;
+                color: white;
+                padding: 20px;
+        }
 </style>
 
 
 <div class="center">
         <p th:text="'Benutzer/Gruppe ID: ' + ${id}" />
+
         <p th:text="'API Key: ' + ${apiKey}" />
         <a href="/index.html" style = "color: white">Bibliothek wechseln</a>
         <h1 align="center">
-            Zotero Sync Tool
+                Zotero Sync Tool
         </h1>
 
 
@@ -42,39 +43,33 @@
         </iframe>
 
         <script th:inline="javascript">
-            function viewItems() {
-                var id = /*[[${id}]]*/ 'default';
-                var group = /*[[${id}]]*/ 'default';
-                var groupOrUser = "users";
-                if (groupOrUser==="on"){
-                        groupOrUser = "groups";
+                function viewItems() {
+                        var id = /*[[${id}]]*/ 'default';
+                        var apiKey = /*[[${apiKey}]]*/ 'default';
+                        var groupOrUser = /*[[${groupOrUser}]]*/ 'default';
+
+                        document.getElementById("myFrame").src = "https://api.zotero.org/"+ groupOrUser + "/" + id + "/items/?key="+ apiKey;
+                        document.getElementById("myFrame").hidden = false;
                 }
 
-                document.getElementById("myFrame").src = "https://api.zotero.org/" + groupOrUser + "/" + id + "/items/";
-                document.getElementById("myFrame").hidden = false;
-            }
+                function viewCollections() {
+                        var id = /*[[${id}]]*/ 'default';
+                        var apiKey = /*[[${apiKey}]]*/ 'default';
+                        var groupOrUser = /*[[${groupOrUser}]]*/ 'default';
+                        document.getElementById("myFrame").src =  "https://api.zotero.org/"+ groupOrUser + "/" + id + "/collections/?key="+ apiKey;
+                        document.getElementById("myFrame").hidden = false;
+                }
 
-            function viewCollections() {
-                    var id = /*[[${id}]]*/ 'default';
-                    var group = /*[[${id}]]*/ 'default';
-                    var groupOrUser = "users";
-                    if (groupOrUser==="on"){
-                            groupOrUser = "groups";
-                    }
-                document.getElementById("myFrame").src = "https://api.zotero.org/"+ groupOrUser + "/" + " + id + "/collections/";
-                document.getElementById("myFrame").hidden = false;
-            }
+                function syncItems() {
 
-            function syncItems() {
+                }
 
-            }
+                function syncFromCollection() {
 
-            function syncFromCollection() {
-
-            }
+                }
 
         </script>
 
-    </div>
+</div>
 </body>
 </html>
