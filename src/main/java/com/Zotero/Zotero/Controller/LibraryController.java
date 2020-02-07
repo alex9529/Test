@@ -1,9 +1,7 @@
 package com.Zotero.Zotero.Controller;
 
 
-import com.Zotero.Zotero.APICalls;
-import com.Zotero.Zotero.JSONObjects.Item;
-import com.Zotero.Zotero.SQL.ItemSQL;
+
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
@@ -18,20 +16,12 @@ import java.util.LinkedList;
 public class LibraryController {
 
 
-	@Bean
-	public RestTemplate restTemplate(RestTemplateBuilder builder) {
-		return builder.build();
-	}
 
 	@GetMapping("/library")
 	public String library(@RequestParam(name="id", required=false, defaultValue="") String id,
 						  @RequestParam(name="apiKey", required=false, defaultValue="") String apiKey,
 						  @RequestParam(name="group", required=false, defaultValue="off") String groupOrUser, Model model, RestTemplate restTemplate) {
 
-
-		APICalls apiCalls = new APICalls();
-
-		LinkedList<ItemSQL>itemSQLList = new LinkedList<>();
 
 		model.addAttribute("id", id);
 		model.addAttribute("apiKey", apiKey);

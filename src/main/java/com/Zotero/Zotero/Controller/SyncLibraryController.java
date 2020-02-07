@@ -2,6 +2,7 @@ package com.Zotero.Zotero.Controller;
 
 
 import com.Zotero.Zotero.APICalls;
+import com.Zotero.Zotero.JSONObjects.Item;
 import com.Zotero.Zotero.SQL.ItemSQL;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -14,33 +15,20 @@ import org.springframework.web.client.RestTemplate;
 import java.util.LinkedList;
 
 @Controller
-public class SyncController {
+public class SyncLibraryController {
 
 
-	@Bean
-	public RestTemplate restTemplate(RestTemplateBuilder builder) {
-		return builder.build();
-	}
-
-	@GetMapping("/sync")
-	public String sync(@RequestParam(name="itemOrCollection", defaultValue="") String id,
-						  Model model, RestTemplate restTemplate) {
+	@GetMapping("/syncLibrary")
+	public String syncLibrary(RestTemplate restTemplate) {
 
 
 		APICalls apiCalls = new APICalls();
+		//LinkedList<Item> itemList = apiCalls.CallAllItems();
 
 		LinkedList<ItemSQL>itemSQLList = new LinkedList<>();
 
-		model.addAttribute("id", id);
+		return "syncLibrary";
 
-
-		if (groupOrUser.equals("on")){
-			model.addAttribute("groupOrUser", "groups");
-		}
-		else {
-			model.addAttribute("groupOrUser", "users");
-		}
-		return "sync";
 	}
 
 }
