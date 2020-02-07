@@ -12,44 +12,55 @@
         margin: auto;
         width: 60%;
         height: 800px;
-        border: 3px solid #4379a5;
+        background-color: #4379a5;
+        color: white;
         padding: 100px;
     }
 </style>
 
 
 <div class="center">
-        <p th:text="'Benutzer/Gruppe ID: ' + ${id} + '.'" />
-        <a href="/index.html">Bibliothek wechseln</a>
+        <p th:text="'Benutzer/Gruppe ID: ' + ${id}" />
+        <a href="/index.html" style = "color: white">Bibliothek wechseln</a>
         <h1 align="center">
             Zotero API to PSQL
         </h1>
 
 
 
-        <button onclick="viewItems()">Alle Items in der Bibliothek anzeigen</button>
+        <button onclick="viewItems()">Alle Items aus der Bibliothek anzeigen</button>
         <br> <br>
-        <button onclick="viewCollections()">Alle Collections in der Bibliothek anzeigen</button>
+        <button onclick="viewCollections()">Alle Collections aus der Bibliothek anzeigen</button>
         <br> <br>
         <button onclick="syncItems()">Alle Items mit der Datenbank synchronisieren</button>
         <br> <br>
-        <iframe id="myFrame" src="https://api.zotero.org/" width="100%" height= 650px>
+        <button onclick="syncFromCollection(collectionId)">Alle Items aus der Collection mit der Datenbank synchronisieren</button>
+        <input type="collection" name="collectionId" placeholder="Collection Key">
+        <br> <br>
+        <iframe id="myFrame" src="https://api.zotero.org/" width="100%" height= 600px style="background-color: white" hidden>
         </iframe>
 
         <script th:inline="javascript">
             function viewItems() {
                 var id = /*[[${id}]]*/ 'default';
                 document.getElementById("myFrame").src = "https://api.zotero.org/groups/" + id + "/items/";
+                document.getElementById("myFrame").hidden = false;
             }
 
             function viewCollections() {
                 var id = /*[[${id}]]*/ 'default';
                 document.getElementById("myFrame").src = "https://api.zotero.org/groups/" + id + "/collections/";
+                document.getElementById("myFrame").hidden = false;
             }
 
             function syncItems() {
 
             }
+
+            function syncFromCollection(String collectionId) {
+
+            }
+
         </script>
 
     </div>
