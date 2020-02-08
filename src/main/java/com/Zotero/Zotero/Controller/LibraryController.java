@@ -37,9 +37,15 @@ public class LibraryController {
 		model.addAttribute("groupsOrUsers", groupsOrUsers);
 
 
-		APICalls apiCalls = new APICalls();
-		LinkedList<String> collectionIds = apiCalls.GetAllCollectionIds(restTemplate, id, apiKey, groupsOrUsers);
-		model.addAttribute(collectionIds);
+		/**
+        if (id is valid, establish the list of collections. If not, ){
+                APICalls apiCalls = new APICalls();
+        LinkedList<String> collectionIds = apiCalls.GetAllCollectionIds(restTemplate, id, apiKey, groupsOrUsers);
+        model.addAttribute(collectionIds);
+        }
+        */
+
+
 
 		return "library";
 

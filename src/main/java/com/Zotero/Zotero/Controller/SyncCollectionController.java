@@ -20,13 +20,17 @@ public class SyncCollectionController {
 
 
 	@GetMapping("/syncCollection")
-	public String syncCollection(RestTemplate restTemplate, @RequestParam(name="collectionId", required=false, defaultValue="") String collectionId) {
+	public String syncCollection(RestTemplate restTemplate,
+								 @RequestParam(name="collectionId", required=false, defaultValue="") String collectionId,
+								 @RequestParam(name="groupsOrUsers", required=false, defaultValue="") String groupsOrUsers,
+								 @RequestParam(name="apiKey", required=false, defaultValue="") String apiKey,
+								 @RequestParam(name="id", required=false, defaultValue="") String id) {
 
 
 		APICalls apiCalls = new APICalls();
 		SQLActions sqlActions = new SQLActions();
 
-		Collection collection = apiCalls.CallCollection(restTemplate,"2407208",collectionId,"","groups");
+		Collection collection = apiCalls.CallCollection(restTemplate,id,collectionId,apiKey,groupsOrUsers);
 		//CollectionSQL collectionSQL = n
 
 		//LinkedList<Item> itemList = apiCalls.CallAllItems();
