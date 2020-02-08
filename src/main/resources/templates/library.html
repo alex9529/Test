@@ -35,13 +35,19 @@
 
     <form action="/syncLibrary" target="_blank" method="get">
         <input type="submit" value="Alle Items synchronisieren">
+        <input id="id1" type="hidden" name="id"  />
+        <input id="apiKey1" type="hidden" name="id"  />
+        <input id="groupsOrUsers1" type="hidden" name="id"  />
     </form>
 
 
     <form action="/syncCollection" target="_blank" method="get">
         <br>
         <input type="submit" value="Alle Items aus einer bestimmten Collection synchronisieren">
-        <input type="checkbox" name="collectionId" placeholder="Collection Key" required>
+        <input id="id2" type="hidden" name="id"  />
+        <input id="apiKey2" type="hidden" name="id"  />
+        <input id="groupsOrUsers2" type="hidden" name="id"  />
+        <input type="text" name="collectionId" placeholder="Collection Key" required>
         <br>
     </form>
 
@@ -52,19 +58,31 @@
 
 
     <script th:inline="javascript">
+
+
+        document.getElementById("id1").value = /*[[${id}]]*/ 'default';
+        document.getElementById("apiKey1").value = /*[[${apiKey}]]*/ 'default';
+        document.getElementById("groupsOrUsers1").value = /*[[${groupsOrUsers}]]*/ 'default';
+
+        document.getElementById("id2").value = /*[[${id}]]*/ 'default';
+        document.getElementById("apiKey2").value = /*[[${apiKey}]]*/ 'default';
+        document.getElementById("groupsOrUsers2").value = /*[[${groupsOrUsers}]]*/ 'default';
+
+
+
         function viewItems() {
             var id = /*[[${id}]]*/ 'default';
             var apiKey = /*[[${apiKey}]]*/ 'default';
-            var groupOrUser = /*[[${groupOrUser}]]*/ 'default';
-            document.getElementById("myFrame").src = "https://api.zotero.org/" + groupOrUser + "/" + id + "/items/?key=" + apiKey;
+            var groupsOrUsers = /*[[${groupsOrUsers}]]*/ 'default';
+            document.getElementById("myFrame").src = "https://api.zotero.org/" + groupsOrUsers + "/" + id + "/items/?key=" + apiKey;
             document.getElementById("myFrame").hidden = false;
         }
 
         function viewCollections() {
             var id = /*[[${id}]]*/ 'default';
             var apiKey = /*[[${apiKey}]]*/ 'default';
-            var groupOrUser = /*[[${groupOrUser}]]*/ 'default';
-            document.getElementById("myFrame").src = "https://api.zotero.org/" + groupOrUser + "/" + id + "/collections/?key=" + apiKey;
+            var groupsOrUsers = /*[[${groupsOrUsers}]]*/ 'default';
+            document.getElementById("myFrame").src = "https://api.zotero.org/" + groupsOrUsers + "/" + id + "/collections/?key=" + apiKey;
             document.getElementById("myFrame").hidden = false;
         }
     </script>

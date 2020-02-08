@@ -27,7 +27,7 @@ public class SyncCollectionController {
 		SQLActions sqlActions = new SQLActions();
 
 		Collection collection = apiCalls.CallCollection(restTemplate,"2407208",collectionId,"","groups");
-		CollectionSQL collectionSQL = n
+		//CollectionSQL collectionSQL = n
 
 		//LinkedList<Item> itemList = apiCalls.CallAllItems();
 
