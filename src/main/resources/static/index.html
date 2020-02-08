@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html>
+<html xmlns:th="http://www.springframework.org/schema/jdbc">
 <head>
     <title>Zotero Sync Tool - Home</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -32,14 +32,36 @@
             <br><br>
             Falls notwendig, API Key eingeben:
             <br>
-            <input type="text" name="apiKey">
+            <input id="apiKey" type="text" name="apiKey" >
             <br><br>
             Ist dies eine Gruppenbibliothek?
-            <input type="checkbox" name="group">
+            <input id="groupCheckbox" type="checkbox" name="group">
             <br><br>
-            <input type="submit" value="Bibliothek anzeigen">
+            <input onclick="viewItems()" type="submit" value="Bibliothek anzeigen">
         </form>
     </div>
 </div>
 </body>
+
+<script th:inline="javascript">
+
+    function viewItems(){
+
+        if  (document.getElementById("groupCheckbox").checked === false){
+            if (document.getElementById("apiKey").value === ""){
+                document.getElementById("apiKey").required = true;
+            }
+        }
+        else {
+            document.getElementById("apiKey").setCustomValidity('');
+            document.getElementById("apiKey").required = false;
+        }
+    }
+
+</script>
+
+
+
+
+
 </html>
