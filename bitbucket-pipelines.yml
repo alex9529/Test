@@ -8,7 +8,22 @@ image: maven:3.6.1
 pipelines:
   default:
     - step:
+        services:
+          - psql
         caches:
           - maven
         script: # Modify the commands below to build your repository.
           - mvn -B verify # -B batch mode makes Maven less verbose
+
+
+Definitions:
+  services:
+    psql:
+      image: postgres:alpine
+      ports:
+        - 3333:5432
+      environment:
+        PSQL_DATABASE: zotero
+        PSQL_ROOT_PASSWORD: password
+        PSQL_USER: postgres
+        PSQL_PASSWORD: password
