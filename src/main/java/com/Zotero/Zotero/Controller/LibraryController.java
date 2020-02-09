@@ -2,9 +2,7 @@ package com.Zotero.Zotero.Controller;
 
 
 
-import com.Zotero.Zotero.APICalls;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.context.annotation.Bean;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

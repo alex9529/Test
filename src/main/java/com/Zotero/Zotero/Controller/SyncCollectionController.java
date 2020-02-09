@@ -3,6 +3,7 @@ package com.Zotero.Zotero.Controller;
 
 import com.Zotero.Zotero.APICalls;
 import com.Zotero.Zotero.JSONObjects.Collection;
+import com.Zotero.Zotero.JSONObjects.Item;
 import com.Zotero.Zotero.SQL.CollectionSQL;
 import com.Zotero.Zotero.SQL.ItemSQL;
 import com.Zotero.Zotero.SQLActions;
@@ -30,12 +31,15 @@ public class SyncCollectionController {
 		APICalls apiCalls = new APICalls();
 		SQLActions sqlActions = new SQLActions();
 
+
 		Collection collection = apiCalls.CallCollection(restTemplate,id,collectionId,apiKey,groupsOrUsers);
-		//CollectionSQL collectionSQL = n
+		CollectionSQL collectionSQL = new CollectionSQL(collection);
 
-		//LinkedList<Item> itemList = apiCalls.CallAllItems();
-
+		LinkedList<Item> itemList = apiCalls.CallAllItems(restTemplate,id,apiKey,groupsOrUsers);
 		LinkedList<ItemSQL>itemSQLList = new LinkedList<>();
+
+
+
 
 		return "syncCollection";
 

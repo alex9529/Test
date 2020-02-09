@@ -2,15 +2,20 @@ package com.Zotero.Zotero;
 
 import com.Zotero.Zotero.SQL.*;
 import org.apache.catalina.User;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
+import javax.persistence.PersistenceContext;
 import java.util.LinkedList;
+
 
 public class SQLActions {
 
-    private UserSQL userSQL;
 
         public void saveItem(ItemRepository itemRepo, CollectionRepository collectionRepo, ItemCollectionRepository itemCollectionRepo,
-                             ItemTypeFieldsRepository itemTypeFieldsRepo, ItemAuthorRepository itemAuthorRepo, LibraryRepository libraryRepo, ItemAuthorRepository authorRepo, ItemSQL itemSQL, CollectionSQL collectionSQL, LinkedList<ItemCollectionSQL> itemCollectionSQLList, ItemTypeFieldsSQL itemTypeFieldsSQL, LibrarySQL librarySQL, LinkedList<ItemAuthorSQL> itemAuthorSQLList){
+                             ItemTypeFieldsRepository itemTypeFieldsRepo, ItemAuthorRepository itemAuthorRepo, LibraryRepository libraryRepo,
+                             ItemSQL itemSQL, CollectionSQL collectionSQL, LinkedList<ItemCollectionSQL> itemCollectionSQLList, ItemTypeFieldsSQL itemTypeFieldsSQL,
+                             LibrarySQL librarySQL, LinkedList<ItemAuthorSQL> itemAuthorSQLList){
 
             itemRepo.save(itemSQL);
             collectionRepo.save(collectionSQL);
@@ -25,6 +30,7 @@ public class SQLActions {
 
             itemTypeFieldsRepo.save(itemTypeFieldsSQL);
             libraryRepo.save(librarySQL);
+
 
         }
 
