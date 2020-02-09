@@ -11,7 +11,7 @@
     .center {
         margin: auto;
         width: 60%;
-        height: 950px;
+        height: 800px;
         background-color: #4379a5;
         color: white;
         padding: 20px;
@@ -26,34 +26,36 @@
         Zotero Sync Tool
     </h1>
 
-
-    <button onclick="viewItems()">Alle Items aus der Bibliothek anzeigen</button>
-    <br> <br>
-    <button onclick="viewCollections()">Alle Collections aus der Bibliothek anzeigen</button>
-    <br> <br>
-
-
-    <form action="/syncLibrary" target="blank" method="get">
-        <input type="submit" value="Alle Items synchronisieren">
-        <input id="id1" type="hidden" name="id"  />
-        <input id="apiKey1" type="hidden" name="apiKey"  />
-        <input id="groupsOrUsers1" type="hidden" name="groupsOrUsers"  />
-    </form>
+    <div class="center">
+        <button onclick="viewItems()">Alle Items aus der Bibliothek anzeigen</button>
+        <br> <br>
+        <button onclick="viewCollections()">Alle Collections aus der Bibliothek anzeigen</button>
+        <br> <br>
 
 
-    <form action="/syncCollection" target="blank" method="get">
-        <br>
-        <input type="submit" value="Alle Items aus einer bestimmten Collection synchronisieren">
-        <input id="id2" type="hidden" name="id"  />
-        <input id="apiKey2" type="hidden" name="apiKey"  />
-        <input id="groupsOrUsers2" type="hidden" name="groupsOrUsers"  />
-        <input type="text" name="collectionKey" placeholder="Collection Key" required>
-        <br>
-    </form>
+        <form action="/syncLibrary" target="blank" method="get">
+            <input type="submit" value="Alle Items aus der gesamten Bibliothek synchronisieren">
+            <input id="id1" type="hidden" name="id"/>
+            <input id="apiKey1" type="hidden" name="apiKey"/>
+            <input id="groupsOrUsers1" type="hidden" name="groupsOrUsers"/>
+        </form>
 
 
-    <iframe id="myFrame" src="https://api.zotero.org/" width="100%" height=600px style="background-color: white" hidden>
-    </iframe>
+        <form action="/syncCollection" target="blank" method="get">
+            <br>
+            <input type="submit" value="Alle Items aus einer bestimmten Collection synchronisieren">
+            <input id="id2" type="hidden" name="id"/>
+            <input id="apiKey2" type="hidden" name="apiKey"/>
+            <input id="groupsOrUsers2" type="hidden" name="groupsOrUsers"/>
+            <input type="text" name="collectionKey" placeholder="Collection Key" required>
+            <br>
+        </form>
+        <iframe id="myFrame" src="https://api.zotero.org/" width="100%" height=600px style="background-color: white"
+                hidden>
+        </iframe>
+
+    </div>
+
 
 
 
@@ -67,7 +69,6 @@
         document.getElementById("id2").value = /*[[${id}]]*/ 'default';
         document.getElementById("apiKey2").value = /*[[${apiKey}]]*/ 'default';
         document.getElementById("groupsOrUsers2").value = /*[[${groupsOrUsers}]]*/ 'default';
-
 
 
         function viewItems() {
