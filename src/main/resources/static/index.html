@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.springframework.org/schema/jdbc">
+<head>
+    <title>Zotero Sync Tool - Home</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+
+
+<style>
+    .center {
+        margin: auto;
+        width: 60%;
+        height: 950px;
+        background-color: #4379a5;
+        color: white;
+        padding: 20px;
+    }
+</style>
+
+
+<div class="center">
+    <h1 align="center">
+        Zotero Sync Tool
+    </h1>
+    <div class="center">
+
+        <form action="/library" target="blank" method="get">
+            <br>
+            Benutzer/Gruppen-ID (Nur Ziffern):
+            <br>
+            <input type="number" name="id" required>
+            <br><br>
+            API Key:
+            <br>
+            <input id="apiKey" type="text" name="apiKey" >
+            <br><br>
+            Ist dies eine Gruppenbibliothek?
+            <input id="groupCheckbox" type="checkbox" name="group">
+            <br><br>
+            <input onclick="viewItems()" type="submit" value="Bibliothek anzeigen">
+        </form>
+    </div>
+</div>
+</body>
+
+<script th:inline="javascript">
+
+    function viewItems(){
+
+        if  (document.getElementById("groupCheckbox").checked === false){
+            if (document.getElementById("apiKey").value === ""){
+                document.getElementById("apiKey").required = true;
+            }
+        }
+        else {
+            document.getElementById("apiKey").setCustomValidity('');
+            document.getElementById("apiKey").required = false;
+        }
+    }
+
+</script>
+
+
+
+
+
+</html>

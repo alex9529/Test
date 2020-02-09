@@ -1,11 +1,9 @@
-package com.Zotero.Zotero.SQL;
+package com.Zotero.Zotero.Repositories;
 
 import com.Zotero.Zotero.JSONObjects.Item;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
-import java.io.Serializable;
 
 
 @Entity (name="item_type_fields")

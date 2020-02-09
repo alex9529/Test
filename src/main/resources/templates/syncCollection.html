@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Zotero Sync Tool- Library</title>
+</head>
+<body>
+
+<style>
+    .center {
+        margin: auto;
+        width: 60%;
+        height: 950px;
+        background-color: #4379a5;
+        color: white;
+        padding: 20px;
+    }
+</style>
+
+<div class="center">
+
+    <p th:text="'Benutzer/Gruppe ID: ' + ${id}"/>
+    <a href="/index.html" style="color: white">Bibliothek wechseln</a>
+
+    <h1 align="center">
+        Zotero Sync Tool
+    </h1>
+
+    <p th:text="'Alle ' + ${numberItems} + ' Items aus der Collection &quot;' + ${collectionName} + '&quot; (Collection-Key: ' + ${collectionKey}+ ') wurden synchronisiert.'">
+    </p>
+
+    <a href="javascript:history.back()" style="color: white">Zurück zur Bibliothek</a>
+
+</div>
+
+
+
+</body>
+</html>

@@ -1,25 +1,18 @@
 package com.Zotero.Zotero;
 
 
-import com.Zotero.Zotero.JSONObjects.Collection;
-import com.Zotero.Zotero.JSONObjects.Item;
-import com.Zotero.Zotero.SQL.*;
-import net.bytebuddy.dynamic.scaffold.MethodGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
-
-import java.util.LinkedList;
-
 @SpringBootApplication
 public class ZoteroApplication {
 
+	/*
 	private ItemSQL itemSQL;
 	private LinkedList<ItemSQL> itemSQLList = new LinkedList<ItemSQL>();
 	private LinkedList<CollectionSQL> collectionSQList = new LinkedList<CollectionSQL>();
@@ -29,8 +22,10 @@ public class ZoteroApplication {
 	private UserSQL userSQL;
 	private LinkedList<ItemAuthorSQL> itemAuthorSQLList;
 	private LibrarySQL librarySQL;
-
 	private static final Logger log = LoggerFactory.getLogger(ZoteroApplication.class);
+	 */
+
+
 	public static void main(String[] args) {
 		SpringApplication.run(ZoteroApplication.class, args);
 	}
@@ -40,6 +35,8 @@ public class ZoteroApplication {
 		return builder.build();
 	}
 
+
+	/*
 	@Bean
 	public CommandLineRunner GetSQLObjects(RestTemplate restTemplate) throws Exception {
 		return args -> {
@@ -80,7 +77,7 @@ public class ZoteroApplication {
 			//-------------------------------------
 
 
-			//Get all Collecitons in the library
+			//Get all Collections in the library
 			//-------------------------------------
 			LinkedList<Collection> collections = apiCalls.CallAllCollections(restTemplate, libraryId, apiKey,groupOrUser);
 			for (int k = 0; k<collections.size(); k++){
@@ -119,28 +116,43 @@ public class ZoteroApplication {
 
 			log.info(item.toString());
 		};
-	}
+	}*/
 
-
+	/*
 	@Bean
-	public CommandLineRunner SendToDB(ItemRepository itemRepo, CollectionRepository collectionRepo, ItemCollectionRepository itemCollectionRepo,
-									  ItemTypeFieldsRepository itemTypeFieldsRepo, UserRepository userRepo, ItemAuthorRepository itemAuthorRepo, LibraryRepository libraryRepo) {
-		return (args) -> {
-			SQLActions sqlActions = new SQLActions();
-
-			sqlActions.saveUser(userSQL, userRepo);
-			sqlActions.saveItem(itemRepo,collectionRepo,itemCollectionRepo,itemTypeFieldsRepo,itemAuthorRepo,libraryRepo, itemAuthorRepo,
-					itemSQL, collectionSQL, itemCollectionSQLList, itemTypeFieldsSQL, librarySQL, itemAuthorSQLList);
-
+	public String syncLibrary(RestTemplate restTemplate,
+							  @RequestParam(name="groupsOrUsers", required=false, defaultValue="") String groupsOrUsers,
+							  @RequestParam(name="apiKey", required=false, defaultValue="") String apiKey,
+							  @RequestParam(name="id", required=false, defaultValue="") String id,
+							  ItemRepository itemRepo, CollectionRepository collectionRepo, ItemCollectionRepository itemCollectionRepo,
+							  ItemTypeFieldsRepository itemTypeFieldsRepo, UserRepository userRepo, ItemAuthorRepository itemAuthorRepo, LibraryRepository libraryRepo
+	) {
 
 
-			for (int k = 0; k<itemSQLList.size(); k++) {
+		APICalls apiCalls = new APICalls();
+		SQLActions sqlActions = new SQLActions();
 
-				sqlActions.saveItem(itemRepo, collectionRepo,itemCollectionRepo,itemTypeFieldsRepo,itemAuthorRepo,libraryRepo, itemAuthorRepo,
-						itemSQLList.get(k), collectionSQL, itemCollectionSQLList, itemTypeFieldsSQL, librarySQL, itemAuthorSQLList);
-			}
+		LinkedList<ItemSQL> itemSQLList = new LinkedList<>();
 
-			log.info("");
-		};
+		//all items from the library are called and transformed into SQL-ready objects
+		LinkedList<Item> itemList = apiCalls.CallAllItems(restTemplate,id,apiKey,groupsOrUsers);
+		for (int k = 0; k<itemList.size(); k++){
+			itemSQLList.add(new ItemSQL(itemList.get(k)));
+		}
+
+		//each item is being saved in the database
+		for (int k = 0; k<itemSQLList.size(); k++) {
+			sqlActions.saveItem(itemRepo, collectionRepo, itemCollectionRepo,itemTypeFieldsRepo,itemAuthorRepo,libraryRepo,
+					itemSQLList.get(k), collectionSQL, itemCollectionSQLList, itemTypeFieldsSQL, librarySQL, itemAuthorSQLList);
+		}
+
+		sqlActions.saveUser(userSQL, userRepo);
+
+		return "syncLibrary";
+
+
 	}
+	*/
+
+
 }
