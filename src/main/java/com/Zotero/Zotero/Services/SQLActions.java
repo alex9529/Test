@@ -1,7 +1,6 @@
-package com.Zotero.Zotero;
+package com.Zotero.Zotero.Services;
 
-import com.Zotero.Zotero.JSONObjects.Collection;
-import com.Zotero.Zotero.SQL.*;
+import com.Zotero.Zotero.Repositories.*;
 import java.util.LinkedList;
 
 public class SQLActions {

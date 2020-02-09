@@ -1,18 +1,14 @@
-package com.Zotero.Zotero.Controller;
+package com.Zotero.Zotero.Controllers;
 
 
-import com.Zotero.Zotero.APICalls;
-import com.Zotero.Zotero.JSONObjects.Collection;
+import com.Zotero.Zotero.Services.APICalls;
 import com.Zotero.Zotero.JSONObjects.Item;
-import com.Zotero.Zotero.SQL.*;
-import com.Zotero.Zotero.SQLActions;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.context.annotation.Bean;
+import com.Zotero.Zotero.Repositories.*;
+import com.Zotero.Zotero.Services.SQLActions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.LinkedList;
@@ -79,7 +75,7 @@ public class SyncCollectionController {
 		}
 
 
-		String collectionName = (new LinkedList<Collection>(apiCalls.CallAllCollections(restTemplate,id,apiKey,groupsOrUsers))).get(0).getLibrary().getName();
+
 
 		//Get all the Collection - Item relationships
 		//Loop through all items in the library
@@ -125,6 +121,9 @@ public class SyncCollectionController {
 		if (itemList.size()>0) {
 			sqlActions.saveUser(userSQL, userRepo);
 		}
+
+		String collectionName = apiCalls.GetCollectionName(restTemplate,id,apiKey,groupsOrUsers,collectionKey);
+
 		model.addAttribute("numberItems", itemList.size());
 		model.addAttribute("collectionName", collectionName);
 		model.addAttribute("collectionKey", collectionKey);

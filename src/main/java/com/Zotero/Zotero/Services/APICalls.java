@@ -1,8 +1,7 @@
-package com.Zotero.Zotero;
+package com.Zotero.Zotero.Services;
 
 import com.Zotero.Zotero.JSONObjects.Collection;
 import com.Zotero.Zotero.JSONObjects.Item;
-import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 
@@ -78,7 +77,6 @@ public class APICalls {
         return (item);
     }
 
-
     public LinkedList<Item> CallAllItems(RestTemplate restTemplate, String libraryId, String apiKey, String groupOrUser) {
 
 
@@ -103,7 +101,6 @@ public class APICalls {
 
         return itemList;
     }
-
 
     public LinkedList<Item> CallAllItemsFromCollection(RestTemplate restTemplate, String libraryId, String apiKey, String collectionKey, String groupOrUser) {
 
@@ -197,6 +194,20 @@ public class APICalls {
         Collection collection = restTemplate.getForObject(
                 address, Collection.class);
         return (collection);
+    }
+
+    public String GetCollectionName (RestTemplate restTemplate, String libraryId, String apiKey, String groupOrUser, String collectionKey){
+
+        LinkedList<Collection> collections =  (new LinkedList<Collection>(CallAllCollections(restTemplate,libraryId,apiKey,groupOrUser)));
+        String name = "";
+        int k=0;
+        do {
+            name = collections.get(k).getData().getName();
+            k++;
+        }
+        while (!collections.get(k-1).getData().getKey().equals(collectionKey));
+
+        return name;
     }
 
 }

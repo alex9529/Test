@@ -1,4 +1,4 @@
-package com.Zotero.Zotero.SQL;
+package com.Zotero.Zotero.Repositories;
 
 import com.Zotero.Zotero.JSONObjects.Item;
 

@@ -1,11 +1,11 @@
-package com.Zotero.Zotero.Controller;
+package com.Zotero.Zotero.Controllers;
 
 
-import com.Zotero.Zotero.APICalls;
+import com.Zotero.Zotero.Services.APICalls;
 import com.Zotero.Zotero.JSONObjects.Collection;
 import com.Zotero.Zotero.JSONObjects.Item;
-import com.Zotero.Zotero.SQL.*;
-import com.Zotero.Zotero.SQLActions;
+import com.Zotero.Zotero.Repositories.*;
+import com.Zotero.Zotero.Services.SQLActions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -119,8 +119,12 @@ public class SyncLibraryController {
 
 		sqlActions.saveUser(userSQL, userRepo);
 
+
+		String libraryName = (new LinkedList<Collection>(apiCalls.CallAllCollections(restTemplate,id,apiKey,groupsOrUsers))).get(0).getLibrary().getName();
+
 		model.addAttribute("numberItems", itemList.size());
 		model.addAttribute("id", id);
+		model.addAttribute("libraryName", libraryName);
 
 
 		return "syncLibrary";

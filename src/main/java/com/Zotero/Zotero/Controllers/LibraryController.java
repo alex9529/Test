@@ -1,13 +1,9 @@
-package com.Zotero.Zotero.Controller;
-
-
-
+package com.Zotero.Zotero.Controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 @Controller
