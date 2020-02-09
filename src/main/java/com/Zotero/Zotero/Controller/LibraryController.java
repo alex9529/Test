@@ -7,9 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.LinkedList;
 
 @Controller
 public class LibraryController {
@@ -33,16 +32,6 @@ public class LibraryController {
 			groupsOrUsers = "users";
 		}
 		model.addAttribute("groupsOrUsers", groupsOrUsers);
-
-
-		/**
-        if (id is valid, establish the list of collections. If not, ){
-                APICalls apiCalls = new APICalls();
-        LinkedList<String> collectionIds = apiCalls.GetAllCollectionIds(restTemplate, id, apiKey, groupsOrUsers);
-        model.addAttribute(collectionIds);
-        }
-        */
-
 
 
 		return "library";

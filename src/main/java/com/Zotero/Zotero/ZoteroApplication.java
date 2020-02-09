@@ -22,6 +22,7 @@ import java.util.LinkedList;
 @SpringBootApplication
 public class ZoteroApplication {
 
+	/*
 	private ItemSQL itemSQL;
 	private LinkedList<ItemSQL> itemSQLList = new LinkedList<ItemSQL>();
 	private LinkedList<CollectionSQL> collectionSQList = new LinkedList<CollectionSQL>();
@@ -31,6 +32,8 @@ public class ZoteroApplication {
 	private UserSQL userSQL;
 	private LinkedList<ItemAuthorSQL> itemAuthorSQLList;
 	private LibrarySQL librarySQL;
+
+	 */
 
 	private static final Logger log = LoggerFactory.getLogger(ZoteroApplication.class);
 	public static void main(String[] args) {
@@ -43,6 +46,7 @@ public class ZoteroApplication {
 	}
 
 
+	/*
 	@Bean
 	public CommandLineRunner GetSQLObjects(RestTemplate restTemplate) throws Exception {
 		return args -> {
@@ -83,7 +87,7 @@ public class ZoteroApplication {
 			//-------------------------------------
 
 
-			//Get all Collecitons in the library
+			//Get all Collections in the library
 			//-------------------------------------
 			LinkedList<Collection> collections = apiCalls.CallAllCollections(restTemplate, libraryId, apiKey,groupOrUser);
 			for (int k = 0; k<collections.size(); k++){
@@ -122,13 +126,10 @@ public class ZoteroApplication {
 
 			log.info(item.toString());
 		};
-	}
+	}*/
 
-
-
-
-
-	
+	/*
+	@Bean
 	public String syncLibrary(RestTemplate restTemplate,
 							  @RequestParam(name="groupsOrUsers", required=false, defaultValue="") String groupsOrUsers,
 							  @RequestParam(name="apiKey", required=false, defaultValue="") String apiKey,
@@ -159,8 +160,9 @@ public class ZoteroApplication {
 
 		return "syncLibrary";
 
-	}
 
+	}
+	*/
 
 
 }

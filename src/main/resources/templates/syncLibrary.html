@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Zotero Sync Tool- Library</title>
@@ -19,12 +19,18 @@
 
 <div class="center">
 
+    <p th:text="'Benutzer/Gruppe ID: ' + ${id}"/>
+    <a href="/index.html" style="color: white">Bibliothek wechseln</a>
 
     <h1 align="center">
         Zotero Sync Tool
     </h1>
 
-    <p> Alle Items aus der gesamten Bibliothek werden synchronisiert. </p>
+    <p th:text="'Die in der gesamten Bibliothek sich befindenden ' + ${numberItems} + ' Items wurden synchronisiert.'">
+    </p>
+    <a href="javascript:history.back()" style="color: white">Zurück zur Bibliothek</a>
+
+
 
 </div>
 
