@@ -26,8 +26,7 @@ public class Data {
     private LinkedList<Creators> creators = new LinkedList<Creators>();
     private String abstractNote;
     private String publicationTitle;
-    private int volume;
-    private int issue;
+    private String volume;
     private String pages;
     private String date;
     private String series;
@@ -53,7 +52,7 @@ public class Data {
     private String artworkMedium;
     private String artworkSize;
     private String audioRecordingFormat;
-    private int numberOfVolumes;
+    private String numberOfVolumes;
     private String place;
     private String label;
     private String runningTime;
@@ -68,10 +67,10 @@ public class Data {
     private String history;
     private String blogTitle;
     private String websiteType;
-    private int seriesNumber;
-    private int edition;
+    private String seriesNumber;
+    private String edition;
     private String publisher;
-    private int numPages;
+    private String numPages;
     private String bookTitle;
     private String proceedingsTitle;
     private String conferenceName;
@@ -101,7 +100,7 @@ public class Data {
     private String references;
     private String legalStatus;
     private String programTitle;
-    private int episodeNumber;
+    private String episodeNumber;
     private String audioRedordingFormat;
     private String network;
     private String reportNumber;
@@ -122,7 +121,7 @@ public class Data {
         return audioRecordingFormat;
     }
 
-    public int getNumberOfVolumes() {
+    public String getNumberOfVolumes() {
         return numberOfVolumes;
     }
 
@@ -182,11 +181,11 @@ public class Data {
         return websiteType;
     }
 
-    public int getSeriesNumber() {
+    public String getSeriesNumber() {
         return seriesNumber;
     }
 
-    public int getEdition() {
+    public String getEdition() {
         return edition;
     }
 
@@ -194,7 +193,7 @@ public class Data {
         return publisher;
     }
 
-    public int getNumPages() {
+    public String getNumPages() {
         return numPages;
     }
 
@@ -314,7 +313,7 @@ public class Data {
         return programTitle;
     }
 
-    public int getEpisodeNumber() {
+    public String getEpisodeNumber() {
         return episodeNumber;
     }
 
@@ -370,12 +369,8 @@ public class Data {
         return publicationTitle;
     }
 
-    public int getVolume() {
+    public String getVolume() {
         return volume;
-    }
-
-    public int getIssue() {
-        return issue;
     }
 
     public String getName() {

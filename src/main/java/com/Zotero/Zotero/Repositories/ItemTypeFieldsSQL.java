@@ -121,11 +121,11 @@ public class ItemTypeFieldsSQL  {
         this.extra = item.getData().getExtra();
         this.audioRecordingFormat = item.getData().getAudioRecordingFormat();
         this.seriesTitle = item.getData().getSeriesTitle();
-        this.volume = Integer.toString(item.getData().getVolume());
+        this.volume = item.getData().getVolume();
         if (this.volume.equals("0")){
             this.volume = null;
         }
-        this.numberOfVolumes = Integer.toString(item.getData().getNumberOfVolumes());
+        this.numberOfVolumes = item.getData().getNumberOfVolumes();
         if (this.numberOfVolumes.equals("0")){
             this.numberOfVolumes = null;
         }
@@ -144,16 +144,16 @@ public class ItemTypeFieldsSQL  {
         this.blogTitle = item.getData().getBlogTitle();
         this.websiteType = item.getData().getWebsiteType();
         this.series = item.getData().getSeries();
-        this.seriesNumber = Integer.toString(item.getData().getSeriesNumber());
+        this.seriesNumber = item.getData().getSeriesNumber();
         if (this.seriesNumber.equals("0")){
             this.seriesNumber = null;
         }
-        this.edition = Integer.toString(item.getData().getEdition());
+        this.edition = item.getData().getEdition();
         if (this.edition.equals("0")){
             this.edition = null;
         }
         this.publisher = item.getData().getPublisher();
-        this.numPages = Integer.toString(item.getData().getNumPages());
+        this.numPages = item.getData().getNumPages();
         if (this.numPages.equals("0")){
             this.numPages = null;
         }
@@ -189,7 +189,7 @@ public class ItemTypeFieldsSQL  {
         this.reference = item.getData().getReferences();
         this.legalStatus = item.getData().getLegalStatus();
         this.programTitle = item.getData().getProgramTitle();
-        this.episodeNumber = Integer.toString(item.getData().getEpisodeNumber());
+        this.episodeNumber = item.getData().getEpisodeNumber();
         if (this.episodeNumber.equals("0")){
             this.episodeNumber = null;
         }
