@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.LinkedList;
 
 @Controller
@@ -55,6 +56,8 @@ public class SyncCollectionController {
 	}
 
 
+	LinkedList<String> failedItems;
+
 	@GetMapping("/syncCollection")
 	public String syncLibrary(RestTemplate restTemplate,
 							  @RequestParam(name="groupsOrUsers", required=false, defaultValue="") String groupsOrUsers,
@@ -62,7 +65,7 @@ public class SyncCollectionController {
 							  @RequestParam(name="id", required=false, defaultValue="") String id,
 							  @RequestParam(name="collectionKey", required=false, defaultValue="") String collectionKey, Model model
 
-	) {
+	) throws IOException {
 
 
 
@@ -113,7 +116,7 @@ public class SyncCollectionController {
 
 		//each item is being saved in the database including all the relevant SQL tables: collection, itemCollection, itemTypeFields, itemAuthor, library
 		for (int k = 0; k<itemSQLList.size(); k++) {
-			sqlActions.saveItem(itemRepo, collectionRepo, itemCollectionRepo,itemTypeFieldsRepo,itemAuthorRepo,libraryRepo,
+			failedItems = sqlActions.saveItem(itemRepo, collectionRepo, itemCollectionRepo,itemTypeFieldsRepo,itemAuthorRepo,libraryRepo,
 					itemSQLList.get(k), collectionSQLList, itemCollectionSQLList, itemTypeFieldsSQL, librarySQL, itemAuthorSQLList);
 		}
 
@@ -124,7 +127,14 @@ public class SyncCollectionController {
 
 		String collectionName = apiCalls.GetCollectionName(restTemplate,id,apiKey,groupsOrUsers,collectionKey);
 
-		model.addAttribute("numberItems", itemList.size());
+		//Get the number of item chunks of the size between 1 and 100
+		String url = apiCalls.AssembleCollectionURL(id,apiKey,groupsOrUsers,collectionKey);
+		float numberOfItems = apiCalls.GetNumberOfItems(url);
+		float numberChunks = numberOfItems / 100;
+
+		model.addAttribute("numberChunks", numberChunks);
+		model.addAttribute("numberItems", numberOfItems);
+		model.addAttribute("failedItems", failedItems);
 		model.addAttribute("collectionName", collectionName);
 		model.addAttribute("collectionKey", collectionKey);
 		model.addAttribute("id", id);

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.LinkedList;
 
 @Controller
@@ -53,13 +54,16 @@ public class SyncLibraryController {
 	}
 
 
+	LinkedList<String> failedItems;
+
+
 	@GetMapping("/syncLibrary")
 	public String syncLibrary(RestTemplate restTemplate,
 							  @RequestParam(name="groupsOrUsers", required=false, defaultValue="") String groupsOrUsers,
 							  @RequestParam(name="apiKey", required=false, defaultValue="") String apiKey,
 							  @RequestParam(name="id", required=false, defaultValue="") String id, Model model
 
-	) {
+	) throws IOException {
 
 
 		//all items from the library are called and transformed into SQL-ready objects
@@ -113,7 +117,7 @@ public class SyncLibraryController {
 
 		//each item is being saved in the database including all the relevant SQL tables: collection, itemCollection, itemTypeFields, itemAuthor, library
 		for (int k = 0; k<itemSQLList.size(); k++) {
-			sqlActions.saveItem(itemRepo, collectionRepo, itemCollectionRepo,itemTypeFieldsRepo,itemAuthorRepo,libraryRepo,
+			failedItems = sqlActions.saveItem(itemRepo, collectionRepo, itemCollectionRepo,itemTypeFieldsRepo,itemAuthorRepo,libraryRepo,
 					itemSQLList.get(k), collectionSQLList, itemCollectionSQLList, itemTypeFieldsSQL, librarySQL, itemAuthorSQLList);
 		}
 
@@ -122,7 +126,16 @@ public class SyncLibraryController {
 
 		String libraryName = (new LinkedList<Collection>(apiCalls.CallAllCollections(restTemplate,id,apiKey,groupsOrUsers))).get(0).getLibrary().getName();
 
-		model.addAttribute("numberItems", itemList.size());
+
+
+		//Get the number of item chunks of the size between 1 and 100
+		String url = apiCalls.AssembleURL(id,apiKey,groupsOrUsers);
+		float numberOfItems = apiCalls.GetNumberOfItems(url);
+		float numberChunks = numberOfItems / 100;
+
+		model.addAttribute("numberChunks", numberChunks);
+		model.addAttribute("numberItems", numberOfItems);
+		model.addAttribute("failedItems", failedItems);
 		model.addAttribute("id", id);
 		model.addAttribute("libraryName", libraryName);
 
