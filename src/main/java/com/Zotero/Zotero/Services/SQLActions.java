@@ -5,9 +5,9 @@ import java.util.LinkedList;
 
 public class SQLActions {
 
-        LinkedList<String> failedItems;
+        String failedItems = new String();
 
-        public LinkedList<String> saveItem(ItemRepository itemRepo, CollectionRepository collectionRepo, ItemCollectionRepository itemCollectionRepo,
+        public String saveItem(ItemRepository itemRepo, CollectionRepository collectionRepo, ItemCollectionRepository itemCollectionRepo,
                              ItemTypeFieldsRepository itemTypeFieldsRepo, ItemAuthorRepository itemAuthorRepo, LibraryRepository libraryRepo,
                              ItemSQL itemSQL, LinkedList<CollectionSQL> collectionSQLList, LinkedList<ItemCollectionSQL> itemCollectionSQLList, ItemTypeFieldsSQL itemTypeFieldsSQL,
                              LibrarySQL librarySQL, LinkedList<ItemAuthorSQL> itemAuthorSQLList){
@@ -38,8 +38,9 @@ public class SQLActions {
             //Save the library data
             libraryRepo.save(librarySQL);
             } catch (Exception e) {
-               failedItems.add(itemSQL.getKey());
+               failedItems = itemSQL.getKey();
             }
+
             return failedItems;
         }
 

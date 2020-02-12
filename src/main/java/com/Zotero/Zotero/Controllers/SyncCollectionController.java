@@ -56,7 +56,7 @@ public class SyncCollectionController {
 	}
 
 
-	LinkedList<String> failedItems;
+	LinkedList<String> failedItems = new LinkedList<>();
 
 	@GetMapping("/syncCollection")
 	public String syncLibrary(RestTemplate restTemplate,
@@ -115,9 +115,13 @@ public class SyncCollectionController {
 
 
 		//each item is being saved in the database including all the relevant SQL tables: collection, itemCollection, itemTypeFields, itemAuthor, library
+		failedItems.clear();
 		for (int k = 0; k<itemSQLList.size(); k++) {
-			failedItems = sqlActions.saveItem(itemRepo, collectionRepo, itemCollectionRepo,itemTypeFieldsRepo,itemAuthorRepo,libraryRepo,
-					itemSQLList.get(k), collectionSQLList, itemCollectionSQLList, itemTypeFieldsSQL, librarySQL, itemAuthorSQLList);
+			failedItems.add(sqlActions.saveItem(itemRepo, collectionRepo, itemCollectionRepo,itemTypeFieldsRepo,itemAuthorRepo,libraryRepo,
+					itemSQLList.get(k), collectionSQLList, itemCollectionSQLList, itemTypeFieldsSQL, librarySQL, itemAuthorSQLList));
+			if (failedItems.getLast().equals("")){
+				failedItems.removeLast();
+			}
 		}
 
 
@@ -128,16 +132,19 @@ public class SyncCollectionController {
 		String collectionName = apiCalls.GetCollectionName(restTemplate,id,apiKey,groupsOrUsers,collectionKey);
 
 		//Get the number of item chunks of the size between 1 and 100
-		String url = apiCalls.AssembleCollectionURL(id,apiKey,groupsOrUsers,collectionKey);
-		float numberOfItems = apiCalls.GetNumberOfItems(url);
-		float numberChunks = numberOfItems / 100;
+		String url = apiCalls.AssembleCollectionURL(id,apiKey,collectionKey, groupsOrUsers);
+		int numberOfItems = apiCalls.GetNumberOfItems(url);
 
-		model.addAttribute("numberChunks", numberChunks);
+
+		int successfulItems = numberOfItems-failedItems.size();
+
 		model.addAttribute("numberItems", numberOfItems);
-		model.addAttribute("failedItems", failedItems);
+		model.addAttribute("successfulItems", (successfulItems));
 		model.addAttribute("collectionName", collectionName);
 		model.addAttribute("collectionKey", collectionKey);
 		model.addAttribute("id", id);
+
+
 		return "syncCollection";
 
 	}

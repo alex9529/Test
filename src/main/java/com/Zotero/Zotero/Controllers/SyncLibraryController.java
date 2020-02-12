@@ -54,8 +54,8 @@ public class SyncLibraryController {
 	}
 
 
-	LinkedList<String> failedItems;
 
+	LinkedList<String> failedItems = new LinkedList<>();
 
 	@GetMapping("/syncLibrary")
 	public String syncLibrary(RestTemplate restTemplate,
@@ -64,6 +64,7 @@ public class SyncLibraryController {
 							  @RequestParam(name="id", required=false, defaultValue="") String id, Model model
 
 	) throws IOException {
+
 
 
 		//all items from the library are called and transformed into SQL-ready objects
@@ -116,9 +117,13 @@ public class SyncLibraryController {
 
 
 		//each item is being saved in the database including all the relevant SQL tables: collection, itemCollection, itemTypeFields, itemAuthor, library
+		failedItems.clear();
 		for (int k = 0; k<itemSQLList.size(); k++) {
-			failedItems = sqlActions.saveItem(itemRepo, collectionRepo, itemCollectionRepo,itemTypeFieldsRepo,itemAuthorRepo,libraryRepo,
-					itemSQLList.get(k), collectionSQLList, itemCollectionSQLList, itemTypeFieldsSQL, librarySQL, itemAuthorSQLList);
+			failedItems.add(sqlActions.saveItem(itemRepo, collectionRepo, itemCollectionRepo,itemTypeFieldsRepo,itemAuthorRepo,libraryRepo,
+					itemSQLList.get(k), collectionSQLList, itemCollectionSQLList, itemTypeFieldsSQL, librarySQL, itemAuthorSQLList));
+			if (failedItems.getLast().equals("")){
+				failedItems.removeLast();
+			}
 		}
 
 		sqlActions.saveUser(userSQL, userRepo);
@@ -130,15 +135,15 @@ public class SyncLibraryController {
 
 		//Get the number of item chunks of the size between 1 and 100
 		String url = apiCalls.AssembleURL(id,apiKey,groupsOrUsers);
-		float numberOfItems = apiCalls.GetNumberOfItems(url);
-		float numberChunks = numberOfItems / 100;
+		int numberOfItems = apiCalls.GetNumberOfItems(url);
 
-		model.addAttribute("numberChunks", numberChunks);
+
+		int successfulItems = numberOfItems-failedItems.size();
+
 		model.addAttribute("numberItems", numberOfItems);
-		model.addAttribute("failedItems", failedItems);
+		model.addAttribute("successfulItems", (successfulItems));
 		model.addAttribute("id", id);
 		model.addAttribute("libraryName", libraryName);
-
 
 		return "syncLibrary";
 

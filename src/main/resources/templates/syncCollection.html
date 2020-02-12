@@ -27,7 +27,7 @@
         Zotero Sync Tool
     </h1>
 
-    <p th:text="'Alle ' + ${numberItems} + ' Items aus der Collection &quot;' + ${collectionName} + '&quot; (Collection-Key: ' + ${collectionKey}+ ') wurden synchronisiert.'">
+    <p th:text="${successfulItems} + '/'+ ${numberItems}  + ' aus der Collection &quot;' + ${collectionName} + '&quot; (Collection-Key: ' + ${collectionKey}+ ') sind nun auf dem neusten Stand.'">
     </p>
 
     <a href="javascript:history.back()" style="color: white">Zurück zur Bibliothek</a>
