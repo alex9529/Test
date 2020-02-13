@@ -1,9 +1,10 @@
 package com.Zotero.Zotero.Services;
 
 import com.Zotero.Zotero.Repositories.*;
-
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.LinkedList;
+
 
 public class SQLActions {
 
@@ -49,21 +50,21 @@ public class SQLActions {
 
     public void removeItem(ItemRepository itemRepo, CollectionRepository collectionRepo, ItemCollectionRepository itemCollectionRepo,
                            ItemTypeFieldsRepository itemTypeFieldsRepo, ItemAuthorRepository itemAuthorRepo, LibraryRepository libraryRepo,
-                           ItemSQL itemSQL, LinkedList<CollectionSQL> collectionSQLList, LinkedList<ItemCollectionSQL> itemCollectionSQLList, ItemTypeFieldsSQL itemTypeFieldsSQL,
+                           String itemKey, LinkedList<CollectionSQL> collectionSQLList, LinkedList<ItemCollectionSQL> itemCollectionSQLList, ItemTypeFieldsSQL itemTypeFieldsSQL,
                            LibrarySQL librarySQL, LinkedList<ItemAuthorSQL> itemAuthorSQLList) {
 
 
         //Get a list of all the item-collection relationships from the table item_collection. If the item exists in only one collection, it can be safely deleted,
         //including all the affected tables in the DB (item_type_fields, item_author, item_collection).
         //If it is contained in more than one collection, it must be not removed entirely from the DB but just the item-collection relationship.
-        ArrayList<ItemCollectionSQL> numberOfCollections = (ArrayList<ItemCollectionSQL>) itemCollectionRepo.getAllByItemKey(itemSQL.getKey());
+        ArrayList<ItemCollectionSQL> numberOfCollections = (ArrayList<ItemCollectionSQL>) itemCollectionRepo.getAllByItemKey(itemKey);
         if (numberOfCollections.size() == 1) {
-            itemRepo.removeByKey(itemSQL.getKey());
-            itemCollectionRepo.removeByItemKey(itemSQL.getKey());
-            itemAuthorRepo.removeByItemKey(itemSQL.getKey());
-            itemTypeFieldsRepo.removeByKey(itemSQL.getKey());
+            itemRepo.removeByKey(itemKey);
+            itemCollectionRepo.removeByItemKey(itemKey);
+            itemAuthorRepo.removeByItemKey(itemKey);
+            itemTypeFieldsRepo.removeByKey(itemKey);
         } else {
-           itemCollectionRepo.removeByItemKeyAndCollectionKey(itemSQL.getKey(), collectionSQLList.get(0).getCollectionKey());
+            itemCollectionRepo.removeByItemKeyAndCollectionKey(itemKey, collectionSQLList.get(0).getCollectionKey());
         }
     }
 
