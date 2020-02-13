@@ -1,5 +1,6 @@
 package com.Zotero.Zotero.Services;
 
+import com.Zotero.Zotero.JSONObjects.Collection;
 import com.Zotero.Zotero.JSONObjects.Item;
 import com.Zotero.Zotero.Repositories.*;
 
@@ -80,6 +81,12 @@ public class SQLActions {
     }
 
 
+    public Iterable<CollectionSQL> GetAllCollections(CollectionRepository collectionRepo, int libraryId) {
+
+        return  collectionRepo.findAllByLibraryId(libraryId);
+    }
+
+
     public void saveUser(UserSQL userSQL, UserRepository userRepo) {
         userRepo.save(userSQL);
     }
@@ -153,6 +160,45 @@ public class SQLActions {
         return deletedItems;
     }
 
+    public int CheckForRemovedCollectionsInLibrary(ItemRepository itemRepo, CollectionRepository collectionRepo, ItemCollectionRepository itemCollectionRepo,
+                                             ItemTypeFieldsRepository itemTypeFieldsRepo, ItemAuthorRepository itemAuthorRepo,
+                                             LinkedList<CollectionSQL> collectionSQLList, LibrarySQL librarySQL) {
+
+        int deletedCollections = 0;
+
+        //Get all Collection in the DB
+        ArrayList<CollectionSQL> repositoryCollections = (ArrayList<CollectionSQL>) GetAllCollections(collectionRepo, librarySQL.getLibraryId());
+
+        //Loop through all the collections
+        for (int c = 0; c < repositoryCollections.size(); c++) {
+
+            //Search for a match in the updated collections list coming from the API
+            boolean match = false;
+            int k = 0;
+            while (!match && k < collectionSQLList.size()) {
+                if (repositoryCollections.get(c).getCollectionKey().equals(collectionSQLList.get(k).getCollectionKey())) {
+                    match = true;
+                }
+                k++;
+            }
+            //If there is no match (i.e. the collection in the DB is no longer available on Zotero), remove it
+            if (!match) {
+                //Remove all the items in the collection first
+                for (int i = 0; i<repositoryCollections.get(c).get){
+                    RemoveItem(itemRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo,
+                            repositoryItems.get(c).getKey(), collectionSQLList);
+                    deletedCollections++;
+                }
+                RemoveCollection(collectionRepo, collectionSQLList.get(c));
+
+            }
+        }
+        return deletedCollections;
+    }
+
+    private void RemoveCollection(CollectionRepository collectionRepo, CollectionSQL collectionSQL) {
+        collectionRepo.removeByCollectionKey(collectionSQL.getCollectionKey());
+    }
 }
 
 

@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 public interface CollectionRepository extends CrudRepository<CollectionSQL, String> {
 
     CollectionSQL findByCollectionKey(String collectionKey);
+    Iterable<CollectionSQL> findAllByLibraryId(int libraryId);
     void removeByCollectionKey(String collectionKey);
 
 }

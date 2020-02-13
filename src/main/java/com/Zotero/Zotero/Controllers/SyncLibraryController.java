@@ -123,10 +123,16 @@ public class SyncLibraryController {
         sqlActions.saveUser(userSQL, userRepo);
 
 
+        //Delete Collections from DB if they are no longer available on Zotero
+        int deletedCollections = sqlActions.CheckForRemovedCollectionsInLibrary(itemRepo, collectionRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo,
+                collectionSQLList, itemList, librarySQL);
+
+
+
 
         //Delete Items from DB if they are no longer available on Zotero
         int deletedItems = sqlActions.CheckForRemovedItemsInLibrary(itemRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo,
-                collectionSQLList, itemList, librarySQL);
+                collectionSQLList, librarySQL);
 
 
         String libraryName = (new LinkedList<Collection>(apiCalls.CallAllCollections(restTemplate, id, apiKey, groupsOrUsers))).get(0).getLibrary().getName();

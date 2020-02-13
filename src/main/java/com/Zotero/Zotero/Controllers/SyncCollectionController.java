@@ -72,6 +72,8 @@ public class SyncCollectionController {
         //All items from the collection are called and transformed into SQL-ready objects
         itemList = new LinkedList<>(apiCalls.CallAllItemsFromCollection(restTemplate, id, apiKey, collectionKey, groupsOrUsers));
 
+
+
         //Security Measure to remove all invisible items, i.e. items which have been retrieved from the API but are not visible in the desktop and web apps
         // (their "collections :" attribute does not include the current collection)
         for (int i = 0; i<itemList.size(); i++){
@@ -117,6 +119,7 @@ public class SyncCollectionController {
             userSQL = new UserSQL(itemList.get(0));
             librarySQL = new LibrarySQL(itemList.get(0));
         }
+
 
 
 
