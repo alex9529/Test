@@ -77,6 +77,7 @@ public class SyncCollectionController {
         for (int i = 0; i<itemList.size(); i++){
             if (!itemList.get(i).getData().getCollections().contains(collectionKey)){
                 itemList.remove(i);
+                i--;
             }
         }
 
