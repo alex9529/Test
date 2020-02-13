@@ -99,6 +99,334 @@ public class ItemTypeFieldsSQL  {
     public ItemTypeFieldsSQL() {
     }
 
+    public String getKey() {
+        return key;
+    }
+
+    public int getLibraryId() {
+        return libraryId;
+    }
+
+    public String getItemType() {
+        return itemType;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getAbstractNote() {
+        return abstractNote;
+    }
+
+    public String getArtworkMedium() {
+        return artworkMedium;
+    }
+
+    public String getArtworkSize() {
+        return artworkSize;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public String getShortTitle() {
+        return shortTitle;
+    }
+
+    public String getArchive() {
+        return archive;
+    }
+
+    public String getArchiveLocation() {
+        return archiveLocation;
+    }
+
+    public String getLibraryCatalog() {
+        return libraryCatalog;
+    }
+
+    public String getCallNumber() {
+        return callNumber;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getAccessDate() {
+        return accessDate;
+    }
+
+    public String getRights() {
+        return rights;
+    }
+
+    public String getExtra() {
+        return extra;
+    }
+
+    public String getAudioRecordingFormat() {
+        return audioRecordingFormat;
+    }
+
+    public String getSeriesTitle() {
+        return seriesTitle;
+    }
+
+    public String getVolume() {
+        return volume;
+    }
+
+    public String getNumberOfVolumes() {
+        return numberOfVolumes;
+    }
+
+    public String getPlace() {
+        return place;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public String getRunningTime() {
+        return runningTime;
+    }
+
+    public String getISBN() {
+        return ISBN;
+    }
+
+    public String getBillNumber() {
+        return billNumber;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getCodeVolume() {
+        return codeVolume;
+    }
+
+    public String getSection() {
+        return section;
+    }
+
+    public String getCodePages() {
+        return codePages;
+    }
+
+    public String getLegislativeBody() {
+        return legislativeBody;
+    }
+
+    public String getSession() {
+        return session;
+    }
+
+    public String getHistory() {
+        return history;
+    }
+
+    public String getBlogTitle() {
+        return blogTitle;
+    }
+
+    public String getWebsiteType() {
+        return websiteType;
+    }
+
+    public String getSeries() {
+        return series;
+    }
+
+    public String getSeriesNumber() {
+        return seriesNumber;
+    }
+
+    public String getEdition() {
+        return edition;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public String getNumPages() {
+        return numPages;
+    }
+
+    public String getBookTitle() {
+        return bookTitle;
+    }
+
+    public String getProceedingsTitle() {
+        return proceedingsTitle;
+    }
+
+    public String getConferenceName() {
+        return conferenceName;
+    }
+
+    public String getDOI() {
+        return DOI;
+    }
+
+    public String getCaseName() {
+        return caseName;
+    }
+
+    public String getCourt() {
+        return court;
+    }
+
+    public String getDateDecided() {
+        return dateDecided;
+    }
+
+    public String getDocketNumber() {
+        return docketNumber;
+    }
+
+    public String getReporter() {
+        return reporter;
+    }
+
+    public String getReporterVolume() {
+        return reporterVolume;
+    }
+
+    public String getFirstPage() {
+        return firstPage;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public String getEncyclopediaTitle() {
+        return encyclopediaTitle;
+    }
+
+    public String getVersionNumber() {
+        return versionNumber;
+    }
+
+    public String getSystem() {
+        return system;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public String getProgrammingLanguage() {
+        return programmingLanguage;
+    }
+
+    public String getInterviewMedium() {
+        return interviewMedium;
+    }
+
+    public String getPublicationTitle() {
+        return publicationTitle;
+    }
+
+    public String getJournalAbbreviation() {
+        return journalAbbreviation;
+    }
+
+    public String getManuscriptType() {
+        return manuscriptType;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public String getAssignee() {
+        return assignee;
+    }
+
+    public String getIssuingAuthority() {
+        return issuingAuthority;
+    }
+
+    public String getPatentNumber() {
+        return patentNumber;
+    }
+
+    public String getFilingDate() {
+        return filingDate;
+    }
+
+    public String getApplicationNumber() {
+        return applicationNumber;
+    }
+
+    public String getPriorityNumbers() {
+        return priorityNumbers;
+    }
+
+    public String getIssueDate() {
+        return issueDate;
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
+    public String getLegalStatus() {
+        return legalStatus;
+    }
+
+    public String getProgramTitle() {
+        return programTitle;
+    }
+
+    public String getEpisodeNumber() {
+        return episodeNumber;
+    }
+
+    public String getNetwork() {
+        return network;
+    }
+
+    public String getReportNumber() {
+        return reportNumber;
+    }
+
+    public String getInstitution() {
+        return institution;
+    }
+
+    public String getThesisType() {
+        return thesisType;
+    }
+
+    public String getUniversity() {
+        return university;
+    }
+
+    public String getWebsiteTitle() {
+        return websiteTitle;
+    }
+
+    public String getISSN() {
+        return ISSN;
+    }
+
+    public String getSeriesText() {
+        return seriesText;
+    }
+
     public ItemTypeFieldsSQL(Item item)  {
 
         this.key = item.getKey();

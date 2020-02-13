@@ -26,6 +26,30 @@ public class ItemAuthorSQL implements Serializable {
     public ItemAuthorSQL() {
     }
 
+    public String getItemKey() {
+        return itemKey;
+    }
+
+    public int getLibraryId() {
+        return libraryId;
+    }
+
+    public String getCreatorType() {
+        return creatorType;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     public ItemAuthorSQL(Item item, int i)  {
 
             this.itemKey = item.getData().getKey();

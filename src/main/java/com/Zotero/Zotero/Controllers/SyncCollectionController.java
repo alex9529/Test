@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 @Controller
@@ -26,6 +27,7 @@ public class SyncCollectionController {
 	private ItemTypeFieldsSQL itemTypeFieldsSQL;
 	private UserSQL userSQL;
 	private LibrarySQL librarySQL;
+	private CollectionSQL collectionSQL;
 
 	private LinkedList<Item> itemList = new LinkedList<>();
 	private LinkedList<ItemSQL> itemSQLList = new LinkedList<ItemSQL>();
@@ -71,14 +73,15 @@ public class SyncCollectionController {
 
 
 
-		//all items from the collection are called and transformed into SQL-ready objects
+		//All items from the collection are called and transformed into SQL-ready objects
 		itemList = new LinkedList<>(apiCalls.CallAllItemsFromCollection(restTemplate,id,apiKey,collectionKey,groupsOrUsers));
 		for (int k = 0; k<itemList.size(); k++){
 			itemSQLList.add(new ItemSQL(itemList.get(k)));
 		}
 
-
-
+		//Get the collection and transform it into SQL-ready object
+		CollectionSQL collectionSQL = new CollectionSQL(apiCalls.CallCollection(restTemplate,id,collectionKey,apiKey,groupsOrUsers));
+		collectionSQLList.add(collectionSQL);
 
 		//Get all the Collection - Item relationships
 		//Loop through all items in the library
@@ -106,11 +109,37 @@ public class SyncCollectionController {
 			itemTypeFieldsSQL = new ItemTypeFieldsSQL(itemList.get(i));
 		}
 
-
+		//Save user and library data
 		if (itemList.size()>0){
 			userSQL = new UserSQL(itemList.get(0));
 			librarySQL = new LibrarySQL(itemList.get(0));
 		}
+
+
+		//Get all item-collection relationships in the DB
+		ArrayList<ItemCollectionSQL> repositoryItemCollection = (ArrayList<ItemCollectionSQL>) sqlActions.GetItemCollectionList(itemCollectionRepo,collectionKey);
+
+		//Loop through all the items in the collection
+		for (int i=0; i<repositoryItemCollection.size(); i++){
+
+			//Search for a match in the updated item list coming from the API
+			boolean match = false;
+			int k=0;
+			while (match || k<itemList.size()){
+				if (repositoryItemCollection.get(i).getItemKey().equals(itemList.get(k).getKey())) {
+					match = true;
+				}
+				k++;
+			}
+		}
+
+
+		
+		LinkedList<String> keysFromItemCollection = new LinkedList<>();
+
+	
+
+
 
 
 

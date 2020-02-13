@@ -67,19 +67,17 @@ public class SyncLibraryController {
 
 
 
-		//all items from the library are called and transformed into SQL-ready objects
+		//All items from the library are called and transformed into SQL-ready objects
 		itemList = new LinkedList<>(apiCalls.CallAllItems(restTemplate,id,apiKey,groupsOrUsers));
 		for (int k = 0; k<itemList.size(); k++){
 			itemSQLList.add(new ItemSQL(itemList.get(k)));
 		}
 
-		//Get all Collections in the library and transform them into SQL-ready objects
+		//All collections from the library are called and transformed into SQL-ready objects
 		LinkedList<Collection> collections = apiCalls.CallAllCollections(restTemplate, id, apiKey,groupsOrUsers);
 		for (int k = 0; k<collections.size(); k++){
 			collectionSQLList.add(new CollectionSQL(collections.get(k)));
 		}
-
-
 
 
 		//Get all the Collection - Item relationships

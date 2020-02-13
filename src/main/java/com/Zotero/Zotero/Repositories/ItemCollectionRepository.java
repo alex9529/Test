@@ -4,8 +4,12 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface ItemCollectionRepository extends CrudRepository<ItemCollectionSQL, String> {
 
-    ItemCollectionSQL findByCollectionKey(String collectionKey);
+    Iterable<ItemCollectionSQL> getAllByCollectionKey(String collectionKey);
+    Iterable<ItemCollectionSQL> getAllByItemKey(String itemKez);
     ItemCollectionSQL findByItemKey(String itemKey);
+    void removeByItemKey(String itemKey);
+    void removeByItemKeyAndCollectionKey(String itemKey, String collectionKey);
+
 }
 
 

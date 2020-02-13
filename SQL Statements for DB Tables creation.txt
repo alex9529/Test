@@ -31,7 +31,7 @@ CREATE TABLE "collection" (
 
 CREATE TABLE "item_collection" (
   "item_key" VARCHAR,
-  "collection_key" VARCHAR,
+  "collection_key" VARCHAR
   PRIMARY KEY (collection_key, item_key)
 );
 

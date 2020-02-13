@@ -19,6 +19,22 @@ public class LibrarySQL {
     public LibrarySQL() {
     }
 
+    public int getLibraryId() {
+        return libraryId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getLibraryName() {
+        return libraryName;
+    }
+
+    public String getLibraryLink() {
+        return libraryLink;
+    }
+
     public LibrarySQL(Item item)  {
 
         this.libraryId = item.getLibrary().getId();

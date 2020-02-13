@@ -88,6 +88,14 @@ public class ItemSQL {
 
     protected ItemSQL() {}
 
+    public int getLibraryId() {
+        return libraryId;
+    }
+
+    public String getBib() {
+        return bib;
+    }
+
     public ItemSQL(Item item) {
 
             this.key = item.getKey();

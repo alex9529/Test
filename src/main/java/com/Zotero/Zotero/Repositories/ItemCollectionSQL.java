@@ -20,6 +20,15 @@ public class ItemCollectionSQL implements Serializable {
     public ItemCollectionSQL() {
     }
 
+
+    public String getCollectionKey() {
+        return collectionKey;
+    }
+
+    public String getItemKey() {
+        return itemKey;
+    }
+
     public ItemCollectionSQL(Item item, int i)  {
 
             LinkedList<String> collections = item.getData().getCollections();

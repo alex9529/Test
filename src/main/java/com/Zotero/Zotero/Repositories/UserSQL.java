@@ -21,6 +21,18 @@ public class UserSQL {
     public UserSQL() {
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getUserLink() {
+        return userLink;
+    }
+
     public UserSQL(Item item)  {
 
         if (item.getLibrary().getType().equals("group")){

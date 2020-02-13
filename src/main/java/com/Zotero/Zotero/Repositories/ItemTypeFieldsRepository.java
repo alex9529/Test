@@ -14,6 +14,7 @@ import org.springframework.data.repository.CrudRepository;
 public interface ItemTypeFieldsRepository extends CrudRepository<ItemTypeFieldsSQL, String> {
 
     ItemCollectionSQL findByKey(String key);
+    void removeByKey(String key);
 
 }
 
