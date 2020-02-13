@@ -1,7 +1,8 @@
 package com.Zotero.Zotero.Services;
 
+import com.Zotero.Zotero.JSONObjects.Item;
 import com.Zotero.Zotero.Repositories.*;
-import javax.transaction.Transactional;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -48,10 +49,9 @@ public class SQLActions {
     }
 
 
-    public void removeItem(ItemRepository itemRepo, CollectionRepository collectionRepo, ItemCollectionRepository itemCollectionRepo,
-                           ItemTypeFieldsRepository itemTypeFieldsRepo, ItemAuthorRepository itemAuthorRepo, LibraryRepository libraryRepo,
-                           String itemKey, LinkedList<CollectionSQL> collectionSQLList, LinkedList<ItemCollectionSQL> itemCollectionSQLList, ItemTypeFieldsSQL itemTypeFieldsSQL,
-                           LibrarySQL librarySQL, LinkedList<ItemAuthorSQL> itemAuthorSQLList) {
+    public void RemoveItem(ItemRepository itemRepo, ItemCollectionRepository itemCollectionRepo,
+                           ItemTypeFieldsRepository itemTypeFieldsRepo, ItemAuthorRepository itemAuthorRepo,
+                           String itemKey, LinkedList<CollectionSQL> collectionSQLList) {
 
 
         //Get a list of all the item-collection relationships from the table item_collection. If the item exists in only one collection, it can be safely deleted,
@@ -70,8 +70,13 @@ public class SQLActions {
 
     public Iterable<ItemCollectionSQL> GetItemCollectionList(ItemCollectionRepository itemCollectionRepo, String collectionKey) {
 
-        Iterable<ItemCollectionSQL> listSQLItems = itemCollectionRepo.getAllByCollectionKey(collectionKey);
-        return listSQLItems;
+        return itemCollectionRepo.getAllByCollectionKey(collectionKey);
+    }
+
+
+    public Iterable<ItemSQL> GetAllItemsFromLibrary(ItemRepository itemRepo, int libraryId) {
+
+        return  itemRepo.findAllByLibraryId(libraryId);
     }
 
 
@@ -79,4 +84,68 @@ public class SQLActions {
         userRepo.save(userSQL);
     }
 
+    public int CheckForRemovedItemsInCollection(ItemRepository itemRepo, ItemCollectionRepository itemCollectionRepo,
+                                                ItemTypeFieldsRepository itemTypeFieldsRepo, ItemAuthorRepository itemAuthorRepo,
+                                                String collectionKey, LinkedList<CollectionSQL> collectionSQLList, LinkedList<Item> itemList) {
+
+        int deletedItems = 0;
+
+        //Get all item-collection relationships in the DB which are part of the selected collection
+        ArrayList<ItemCollectionSQL> repositoryItemCollection = (ArrayList<ItemCollectionSQL>) GetItemCollectionList(itemCollectionRepo, collectionKey);
+
+        //Loop through all the items in the collection
+        for (int i = 0; i < repositoryItemCollection.size(); i++) {
+
+            //Search for a match in the updated item list coming from the API
+            boolean match = false;
+            int k = 0;
+            while (!match && k < itemList.size()) {
+                if (repositoryItemCollection.get(i).getItemKey().equals(itemList.get(k).getKey())) {
+                    match = true;
+                }
+                k++;
+            }
+            //If there is no match (i.e. the item in the DB is no longer available on Zotero), remove it
+            if (!match) {
+                RemoveItem(itemRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo,
+                        repositoryItemCollection.get(i).getItemKey(), collectionSQLList);
+                deletedItems++;
+            }
+        }
+        return deletedItems;
+    }
+
+    public int CheckForRemovedItemsInLibrary(ItemRepository itemRepo, ItemCollectionRepository itemCollectionRepo,
+                                             ItemTypeFieldsRepository itemTypeFieldsRepo, ItemAuthorRepository itemAuthorRepo,
+                                             LinkedList<CollectionSQL> collectionSQLList, LinkedList<Item> itemList, LibrarySQL librarySQL) {
+
+        int deletedItems = 0;
+
+        //Get all items in the DB which are part of the selected library
+        ArrayList<ItemSQL> repositoryItems = (ArrayList<ItemSQL>) GetAllItemsFromLibrary(itemRepo, librarySQL.getLibraryId());
+
+        //Loop through all the items
+        for (int i = 0; i < repositoryItems.size(); i++) {
+
+            //Search for a match in the updated item list coming from the API
+            boolean match = false;
+            int k = 0;
+            while (!match && k < itemList.size()) {
+                if (repositoryItems.get(i).getKey().equals(itemList.get(k).getKey())) {
+                    match = true;
+                }
+                k++;
+            }
+            //If there is no match (i.e. the item in the DB is no longer available on Zotero), remove it
+            if (!match) {
+                RemoveItem(itemRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo,
+                        repositoryItems.get(i).getKey(), collectionSQLList);
+                deletedItems++;
+            }
+        }
+        return deletedItems;
+    }
+
 }
+
+

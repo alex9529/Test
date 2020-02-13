@@ -29,6 +29,15 @@ public class ItemCollectionSQL implements Serializable {
         return itemKey;
     }
 
+    //Used when syncing items from a specific collection and only that one collection key has to be saved
+    public ItemCollectionSQL(Item item, String collectionKey)  {
+
+        this.collectionKey = collectionKey;
+        this.itemKey = item.getKey();
+
+    }
+
+    //Used when syncing items from the entire library and all collection information has to be saved as well
     public ItemCollectionSQL(Item item, int i)  {
 
             LinkedList<String> collections = item.getData().getCollections();
@@ -37,4 +46,9 @@ public class ItemCollectionSQL implements Serializable {
 
 
     }
+
+
+
+
+
 }

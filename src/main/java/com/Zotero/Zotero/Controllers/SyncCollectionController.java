@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 @Controller
@@ -68,25 +67,32 @@ public class SyncCollectionController {
         LinkedList<CollectionSQL> collectionSQLList = new LinkedList<CollectionSQL>();
         LinkedList<ItemCollectionSQL> itemCollectionSQLList = new LinkedList<>();
         LinkedList<ItemAuthorSQL> itemAuthorSQLList = new LinkedList<>();
-        int deletedItems = 0;
+
 
         //All items from the collection are called and transformed into SQL-ready objects
         itemList = new LinkedList<>(apiCalls.CallAllItemsFromCollection(restTemplate, id, apiKey, collectionKey, groupsOrUsers));
+
+        //Security Measure to remove all invisible items, i.e. items which have been retrieved from the API but are not visible in the desktop and web apps
+        // (their "collections :" attribute does not include the current collection)
+        for (int i = 0; i<itemList.size(); i++){
+            if (!itemList.get(i).getData().getCollections().contains(collectionKey)){
+                itemList.remove(i);
+            }
+        }
+
+
         for (int k = 0; k < itemList.size(); k++) {
             itemSQLList.add(new ItemSQL(itemList.get(k)));
         }
 
-        //Get the collection and transform it into SQL-ready object
+        //Get the collection and transform it into an SQL-ready object
         CollectionSQL collectionSQL = new CollectionSQL(apiCalls.CallCollection(restTemplate, id, collectionKey, apiKey, groupsOrUsers));
         collectionSQLList.add(collectionSQL);
 
         //Get all the Collection - Item relationships
         //Loop through all items in the library
         for (int i = 0; i < itemList.size(); i++) {
-            //Loop through all collections that contain item i
-            for (int c = 0; c < itemList.get(i).getData().getCollections().size(); c++) {
-                itemCollectionSQLList.add(new ItemCollectionSQL(itemList.get(i), c));
-            }
+            itemCollectionSQLList.add(new ItemCollectionSQL(itemList.get(i), collectionKey));
         }
 
         //Get all the Author - Item relationships
@@ -113,62 +119,32 @@ public class SyncCollectionController {
 
 
         //each item is being saved in the database including all the relevant SQL tables: collection, itemCollection, itemTypeFields, itemAuthor, library
+        //Note: to avoid saving "invisible items", only the ones that have the collection key in the JSON attribute "  "collections" : [...]  " are going to be sent to the DB
         failedItems.clear();
         for (int k = 0; k < itemSQLList.size(); k++) {
 
-            if (itemList.get(k).getData().getCollections().size()!=0) {
                 failedItems.add(sqlActions.saveItem(itemRepo, collectionRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo, libraryRepo,
                         itemSQLList.get(k), collectionSQLList, itemCollectionSQLList, itemTypeFieldsSQL, librarySQL, itemAuthorSQLList));
                 if (failedItems.getLast().equals("")) {
                     failedItems.removeLast();
                 }
-            }
-
-
         }
-
 
         if (itemList.size() > 0) {
             sqlActions.saveUser(userSQL, userRepo);
         }
 
+
+        //Delete Items from DB if they are no longer available on Zotero
+        int deletedItems = sqlActions.CheckForRemovedItemsInCollection(itemRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo,
+                collectionKey, collectionSQLList, itemList);
+
+
+        //Retrieve collection name for the syncCollection view
         String collectionName = apiCalls.GetCollectionName(restTemplate, id, apiKey, groupsOrUsers, collectionKey);
 
-
-        //-----------------------------------------------
-        //Delete Items from SQL if they are no longer present in Zotero
-        //Get all item-collection relationships in the DB which are part of the selected collection
-        ArrayList<ItemCollectionSQL> repositoryItemCollection = (ArrayList<ItemCollectionSQL>) sqlActions.GetItemCollectionList(itemCollectionRepo, collectionKey);
-
-        //Loop through all the items in the collection
-        for (int i = 0; i < repositoryItemCollection.size(); i++) {
-
-            //Search for a match in the updated item list coming from the API
-            boolean match = false;
-            int k = 0;
-            while (!match && k < itemList.size()) {
-                if (repositoryItemCollection.get(i).getItemKey().equals(itemList.get(k).getKey())) {
-                    match = true;
-                }
-                k++;
-            }
-            //If there is no match (i.e. the item in the DB is no longer available on Zotero), remove it
-            if (!match) {
-                sqlActions.removeItem(itemRepo, collectionRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo, libraryRepo,
-                        repositoryItemCollection.get(i).getItemKey(), collectionSQLList, itemCollectionSQLList, itemTypeFieldsSQL, librarySQL, itemAuthorSQLList);
-                deletedItems++;
-            }
-        }
-        //-----------------------------------------------
-
-
-        //Get the number of item chunks of the size between 1 and 100
-        String url = apiCalls.AssembleCollectionURL(id, apiKey, collectionKey, groupsOrUsers);
-
-
-
+        //Retrieve number of items for the syncCollection view
         int numberOfItems = collectionSQL.getNumItems();
-                //apiCalls.GetNumberOfItems(url);
 
 
         //Number successfully synced items
@@ -180,7 +156,6 @@ public class SyncCollectionController {
         model.addAttribute("collectionName", collectionName);
         model.addAttribute("collectionKey", collectionKey);
         model.addAttribute("id", id);
-
 
         return "syncCollection";
 

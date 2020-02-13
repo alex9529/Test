@@ -9,6 +9,7 @@ import java.util.LinkedList;
 @Transactional
 public interface ItemRepository extends CrudRepository<ItemSQL, String> {
 
+    Iterable<ItemSQL> findAllByLibraryId(int libraryId);
     ItemSQL findByKey(String key);
     void removeByKey (String key);
 
