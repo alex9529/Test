@@ -119,6 +119,12 @@ public class SyncCollectionController {
         }
 
 
+
+        //Delete Items from DB if they are no longer available on Zotero
+        int deletedItems = sqlActions.CheckForRemovedItemsInCollection(itemRepo, collectionRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo,
+                collectionKey, collectionSQLList, itemList);
+
+
         //each item is being saved in the database including all the relevant SQL tables: collection, itemCollection, itemTypeFields, itemAuthor, library
         //Note: to avoid saving "invisible items", only the ones that have the collection key in the JSON attribute "  "collections" : [...]  " are going to be sent to the DB
         failedItems.clear();
@@ -136,9 +142,7 @@ public class SyncCollectionController {
         }
 
 
-        //Delete Items from DB if they are no longer available on Zotero
-        int deletedItems = sqlActions.CheckForRemovedItemsInCollection(itemRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo,
-                collectionKey, collectionSQLList, itemList);
+
 
 
         //Retrieve collection name for the syncCollection view

@@ -57,7 +57,7 @@ public class SQLActions {
         //Get a list of all the item-collection relationships from the table item_collection. If the item exists in only one collection, it can be safely deleted,
         //including all the affected tables in the DB (item_type_fields, item_author, item_collection).
         //If it is contained in more than one collection, it must be not removed entirely from the DB but just the item-collection relationship.
-        ArrayList<ItemCollectionSQL> numberOfCollections = (ArrayList<ItemCollectionSQL>) itemCollectionRepo.getAllByItemKey(itemKey);
+            ArrayList<ItemCollectionSQL> numberOfCollections = (ArrayList<ItemCollectionSQL>) itemCollectionRepo.getAllByItemKey(itemKey);
         if (numberOfCollections.size() == 1) {
             itemRepo.removeByKey(itemKey);
             itemCollectionRepo.removeByItemKey(itemKey);
@@ -84,7 +84,7 @@ public class SQLActions {
         userRepo.save(userSQL);
     }
 
-    public int CheckForRemovedItemsInCollection(ItemRepository itemRepo, ItemCollectionRepository itemCollectionRepo,
+    public int CheckForRemovedItemsInCollection(ItemRepository itemRepo, CollectionRepository collectionRepo, ItemCollectionRepository itemCollectionRepo,
                                                 ItemTypeFieldsRepository itemTypeFieldsRepo, ItemAuthorRepository itemAuthorRepo,
                                                 String collectionKey, LinkedList<CollectionSQL> collectionSQLList, LinkedList<Item> itemList) {
 
@@ -112,6 +112,13 @@ public class SQLActions {
                 deletedItems++;
             }
         }
+
+        //update the collection table (the number of items attribute will be updated this way)
+
+        collectionRepo.save(collectionSQLList.get(0));
+
+
+
         return deletedItems;
     }
 
