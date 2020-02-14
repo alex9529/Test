@@ -1,10 +1,13 @@
 package com.Zotero.Zotero.Controllers;
 
 
+import com.Zotero.Zotero.JSONObjects.Library;
 import com.Zotero.Zotero.Services.APICalls;
 import com.Zotero.Zotero.JSONObjects.Item;
 import com.Zotero.Zotero.Repositories.*;
 import com.Zotero.Zotero.Services.SQLActions;
+import com.Zotero.Zotero.Services.SQLEntities;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,64 +65,24 @@ public class SyncCollectionController {
     ) throws IOException {
 
 
-        LinkedList<Item> itemList = new LinkedList<>();
-        LinkedList<ItemSQL> itemSQLList = new LinkedList<ItemSQL>();
-        LinkedList<CollectionSQL> collectionSQLList = new LinkedList<CollectionSQL>();
-        LinkedList<ItemCollectionSQL> itemCollectionSQLList = new LinkedList<>();
-        LinkedList<ItemAuthorSQL> itemAuthorSQLList = new LinkedList<>();
+        LinkedList<Item> itemList;
+        LinkedList<ItemSQL> itemSQLList;
+        LinkedList<CollectionSQL> collectionSQLList;
+        LinkedList<ItemCollectionSQL> itemCollectionSQLList;
+        LinkedList<ItemAuthorSQL> itemAuthorSQLList;
 
 
-        //All items from the collection are called and transformed into SQL-ready objects
-        itemList = new LinkedList<>(apiCalls.CallAllItemsFromCollection(restTemplate, id, apiKey, collectionKey, groupsOrUsers));
+        //Generate the itemList and all the necessary SQL-ready entities
+        SQLEntities sqlEntities = apiCalls.PrepareItemsForDB(restTemplate,groupsOrUsers,apiKey,id,collectionKey);
 
-
-
-        //Security Measure to remove all invisible items, i.e. items which have been retrieved from the API but are not visible in the desktop and web apps
-        // (their "collections :" attribute does not include the current collection)
-        for (int i = 0; i<itemList.size(); i++){
-            if (!itemList.get(i).getData().getCollections().contains(collectionKey)){
-                itemList.remove(i);
-                i--;
-            }
-        }
-
-
-        for (int k = 0; k < itemList.size(); k++) {
-            itemSQLList.add(new ItemSQL(itemList.get(k)));
-        }
-
-        //Get the collection and transform it into an SQL-ready object
-        CollectionSQL collectionSQL = new CollectionSQL(apiCalls.CallCollection(restTemplate, id, collectionKey, apiKey, groupsOrUsers));
-        collectionSQLList.add(collectionSQL);
-
-        //Get all the Collection - Item relationships
-        //Loop through all items in the library
-        for (int i = 0; i < itemList.size(); i++) {
-            itemCollectionSQLList.add(new ItemCollectionSQL(itemList.get(i), collectionKey));
-        }
-
-        //Get all the Author - Item relationships
-        //Loop through all items in the library
-        for (int i = 0; i < itemList.size(); i++) {
-            //Loop through all authors of an item
-            for (int a = 0; a < itemList.get(i).getData().getCreators().size(); a++) {
-                itemAuthorSQLList.add(new ItemAuthorSQL(itemList.get(i), a));
-            }
-        }
-
-
-        //Get all the ItemTypeFields for an item
-        //Loop through all items in the library
-        for (int i = 0; i < itemList.size(); i++) {
-            itemTypeFieldsSQL = new ItemTypeFieldsSQL(itemList.get(i));
-        }
-
-        //Save user and library data
-        if (itemList.size() > 0) {
-            userSQL = new UserSQL(itemList.get(0));
-            librarySQL = new LibrarySQL(itemList.get(0));
-        }
-
+        itemList = sqlEntities.getItemList();
+        itemSQLList = sqlEntities.getItemSQLList();
+        collectionSQLList = sqlEntities.getCollectionSQLList();
+        itemCollectionSQLList = sqlEntities.getItemCollectionSQLList();
+        itemAuthorSQLList = sqlEntities.getItemAuthorSQLList();
+        itemTypeFieldsSQL = sqlEntities.getItemTypeFieldsSQL();
+        userSQL = sqlEntities.getUserSQL();
+        librarySQL = sqlEntities.getLibrarySQL();
 
 
 
@@ -128,7 +91,7 @@ public class SyncCollectionController {
                 collectionKey, collectionSQLList, itemList);
 
 
-        //each item is being saved in the database including all the relevant SQL tables: collection, itemCollection, itemTypeFields, itemAuthor, library
+        //Each item in itemSQLList is being saved in the database including all the relevant SQL tables: collection, itemCollection, itemTypeFields, itemAuthor, library
         //Note: to avoid saving "invisible items", only the ones that have the collection key in the JSON attribute "  "collections" : [...]  " are going to be sent to the DB
         failedItems.clear();
         for (int k = 0; k < itemSQLList.size(); k++) {
@@ -145,14 +108,11 @@ public class SyncCollectionController {
         }
 
 
-
-
-
         //Retrieve collection name for the syncCollection view
         String collectionName = apiCalls.GetCollectionName(restTemplate, id, apiKey, groupsOrUsers, collectionKey);
 
         //Retrieve number of items for the syncCollection view
-        int numberOfItems = collectionSQL.getNumItems();
+        int numberOfItems = itemList.size();
 
 
         //Number successfully synced items

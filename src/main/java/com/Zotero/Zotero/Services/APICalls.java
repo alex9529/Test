@@ -2,7 +2,7 @@ package com.Zotero.Zotero.Services;
 
 import com.Zotero.Zotero.JSONObjects.Collection;
 import com.Zotero.Zotero.JSONObjects.Item;
-import org.apache.commons.lang3.ArrayUtils;
+import com.Zotero.Zotero.Repositories.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
@@ -133,7 +133,6 @@ public class APICalls {
             itemList.get(k).setBib(itemBibList.get(k).getBib());
 
         }
-
         return itemList;
     }
 
@@ -289,5 +288,79 @@ public class APICalls {
 
         return name;
     }
+
+
+    public SQLEntities PrepareItemsForDB(RestTemplate restTemplate, String groupsOrUsers, String apiKey, String id, String collectionKey) throws IOException {
+
+        LinkedList<Item> itemList = new LinkedList<>();
+        LinkedList<ItemSQL> itemSQLList = new LinkedList<ItemSQL>();
+        LinkedList<CollectionSQL> collectionSQLList = new LinkedList<CollectionSQL>();
+        LinkedList<ItemCollectionSQL> itemCollectionSQLList = new LinkedList<>();
+        LinkedList<ItemAuthorSQL> itemAuthorSQLList = new LinkedList<>();
+        ItemTypeFieldsSQL itemTypeFieldsSQL = new ItemTypeFieldsSQL();
+        UserSQL userSQL = new UserSQL();
+        LibrarySQL librarySQL = new LibrarySQL();
+
+        SQLEntities sqlEntities;
+
+        //All items from the collection are called
+        itemList = new LinkedList<>(CallAllItemsFromCollection(restTemplate, id, apiKey, collectionKey, groupsOrUsers));
+
+        //Security Measure to remove all invisible items, i.e. items which have been retrieved from the API but are not visible in the desktop and web apps
+        // (their "collections :" attribute does not include the current collection)
+        for (int i = 0; i<itemList.size(); i++){
+            if (!itemList.get(i).getData().getCollections().contains(collectionKey)){
+                itemList.remove(i);
+                i--;
+            }
+        }
+        //The items are transformed into SQL-ready objects
+        for (int k = 0; k < itemList.size(); k++) {
+            itemSQLList.add(new ItemSQL(itemList.get(k)));
+        }
+
+
+
+        //Get the collection and transform it into an SQL-ready object
+        CollectionSQL collectionSQL = new CollectionSQL(CallCollection(restTemplate, id, collectionKey, apiKey, groupsOrUsers));
+        collectionSQLList.add(collectionSQL);
+
+        //Get all the Collection - Item relationships
+        //Loop through all items in the library
+        for (int i = 0; i < itemList.size(); i++) {
+            itemCollectionSQLList.add(new ItemCollectionSQL(itemList.get(i), collectionKey));
+        }
+
+
+
+        //Get all the Author - Item relationships
+        //Loop through all items in the library
+        for (int i = 0; i < itemList.size(); i++) {
+            //Loop through all authors of an item
+            for (int a = 0; a < itemList.get(i).getData().getCreators().size(); a++) {
+                itemAuthorSQLList.add(new ItemAuthorSQL(itemList.get(i), a));
+            }
+        }
+
+
+        //Get all the ItemTypeFields for an item
+        //Loop through all items in the library
+        for (int i = 0; i < itemList.size(); i++) {
+            itemTypeFieldsSQL = new ItemTypeFieldsSQL(itemList.get(i));
+        }
+
+        //Save user and library data
+        if (itemList.size() > 0) {
+            userSQL = new UserSQL(itemList.get(0));
+            librarySQL = new LibrarySQL(itemList.get(0));
+        }
+
+        sqlEntities = new SQLEntities(itemList,itemSQLList,collectionSQLList,itemCollectionSQLList,itemAuthorSQLList,itemTypeFieldsSQL,userSQL,librarySQL);
+
+
+        return  sqlEntities;
+
+    }
+
 
 }

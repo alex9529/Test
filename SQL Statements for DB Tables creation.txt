@@ -19,7 +19,7 @@ CREATE TABLE "item" (
 CREATE TABLE "collection" (
   "collection_key" VARCHAR,
   "version" INT,
-  "user_project_id" VARCHAR,
+  "library_id" int,
   "links_self_href" VARCHAR,
   "num_items" INT,
   "num_collections" INT,

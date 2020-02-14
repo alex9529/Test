@@ -49,13 +49,6 @@ public class SyncLibraryController {
     }
 
 
-    LinkedList<Item> itemList = new LinkedList<>();
-    LinkedList<ItemSQL> itemSQLList = new LinkedList<ItemSQL>();
-    LinkedList<CollectionSQL> collectionSQLList = new LinkedList<CollectionSQL>();
-    LinkedList<ItemCollectionSQL> itemCollectionSQLList = new LinkedList<>();
-    LinkedList<ItemAuthorSQL> itemAuthorSQLList = new LinkedList<>();
-
-
     LinkedList<String> failedItems = new LinkedList<>();
 
     @GetMapping("/syncLibrary")
@@ -65,6 +58,13 @@ public class SyncLibraryController {
                               @RequestParam(name = "id", required = false, defaultValue = "") String id, Model model
 
     ) throws IOException {
+
+
+        LinkedList<Item> itemList = new LinkedList<>();
+        LinkedList<ItemSQL> itemSQLList = new LinkedList<ItemSQL>();
+        LinkedList<CollectionSQL> collectionSQLList = new LinkedList<CollectionSQL>();
+        LinkedList<ItemCollectionSQL> itemCollectionSQLList = new LinkedList<>();
+        LinkedList<ItemAuthorSQL> itemAuthorSQLList = new LinkedList<>();
 
 
         //All items from the library are called and transformed into SQL-ready objects
@@ -106,11 +106,24 @@ public class SyncLibraryController {
         }
 
 
-        userSQL = new UserSQL(itemList.get(0));
-        librarySQL = new LibrarySQL(itemList.get(0));
+        //Save user and library data
+        if (itemList.size() > 0) {
+            userSQL = new UserSQL(itemList.get(0));
+            librarySQL = new LibrarySQL(itemList.get(0));
+        }
 
 
-        //each item is being saved in the database including all the relevant SQL tables: collection, itemCollection, itemTypeFields, itemAuthor, library
+        //Delete Collections from DB if they are no longer available on Zotero
+        int deletedCollections = sqlActions.CheckForRemovedCollectionsInLibrary(itemRepo, collectionRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo,
+                collectionSQLList, librarySQL);
+
+
+        //Delete Items from DB if they are no longer available on Zotero
+        int deletedItems = sqlActions.CheckForRemovedItemsInLibrary(itemRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo,
+                collectionSQLList, itemList, librarySQL);
+
+
+        //Each item in itemSQLList is being saved in the database including all the relevant SQL tables: collection, itemCollection, itemTypeFields, itemAuthor, library
         failedItems.clear();
         for (int k = 0; k < itemSQLList.size(); k++) {
             failedItems.add(sqlActions.saveItem(itemRepo, collectionRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo, libraryRepo,
@@ -123,30 +136,23 @@ public class SyncLibraryController {
         sqlActions.saveUser(userSQL, userRepo);
 
 
-        //Delete Collections from DB if they are no longer available on Zotero
-        int deletedCollections = sqlActions.CheckForRemovedCollectionsInLibrary(itemRepo, collectionRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo,
-                collectionSQLList, itemList, librarySQL);
 
 
 
-
-        //Delete Items from DB if they are no longer available on Zotero
-        int deletedItems = sqlActions.CheckForRemovedItemsInLibrary(itemRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo,
-                collectionSQLList, librarySQL);
-
-
+        //Get the library name
         String libraryName = (new LinkedList<Collection>(apiCalls.CallAllCollections(restTemplate, id, apiKey, groupsOrUsers))).get(0).getLibrary().getName();
 
 
         //Get the number of item chunks of the size between 1 and 100
         String url = apiCalls.AssembleURL(id, apiKey, groupsOrUsers);
-        int numberOfItems = apiCalls.GetNumberOfItems(url);
+        int numberOfItems = itemList.size();
 
 
         int successfulItems = numberOfItems - failedItems.size();
 
         model.addAttribute("numberItems", numberOfItems);
         model.addAttribute("deletedItems", deletedItems);
+        model.addAttribute("deletedCollections", deletedCollections);
         model.addAttribute("successfulItems", (successfulItems));
         model.addAttribute("id", id);
         model.addAttribute("libraryName", libraryName);

@@ -16,10 +16,14 @@ public class ItemCollectionSQL implements Serializable {
     private String collectionKey;
     @Id
     private String  itemKey;
+    private int libraryId;
 
     public ItemCollectionSQL() {
     }
 
+    public int getLibraryId() {
+        return libraryId;
+    }
 
     public String getCollectionKey() {
         return collectionKey;
@@ -43,6 +47,7 @@ public class ItemCollectionSQL implements Serializable {
             LinkedList<String> collections = item.getData().getCollections();
             this.collectionKey = collections.get(i);
             this.itemKey = item.getKey();
+            this.libraryId = item.getLibrary().getId();
 
 
     }
