@@ -299,7 +299,7 @@ public class APICalls {
         LinkedList<ItemAuthorSQL> itemAuthorSQLList = new LinkedList<>();
         ItemTypeFieldsSQL itemTypeFieldsSQL = new ItemTypeFieldsSQL();
         UserSQL userSQL = new UserSQL();
-        LibrarySQL librarySQL = new LibrarySQL();
+        LibrarySQL librarySQL;
 
         SQLEntities sqlEntities;
 
@@ -354,6 +354,11 @@ public class APICalls {
             userSQL = new UserSQL(itemList.get(0));
             librarySQL = new LibrarySQL(itemList.get(0));
         }
+        else {
+            librarySQL = new LibrarySQL(Integer.parseInt(id), groupsOrUsers);
+
+        }
+
 
         sqlEntities = new SQLEntities(itemList,itemSQLList,collectionSQLList,itemCollectionSQLList,itemAuthorSQLList,itemTypeFieldsSQL,userSQL,librarySQL);
 

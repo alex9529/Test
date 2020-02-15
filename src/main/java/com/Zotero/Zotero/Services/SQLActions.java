@@ -15,7 +15,7 @@ public class SQLActions {
     public String saveItem(ItemRepository itemRepo, CollectionRepository collectionRepo, ItemCollectionRepository itemCollectionRepo,
                            ItemTypeFieldsRepository itemTypeFieldsRepo, ItemAuthorRepository itemAuthorRepo, LibraryRepository libraryRepo,
                            ItemSQL itemSQL, LinkedList<CollectionSQL> collectionSQLList, LinkedList<ItemCollectionSQL> itemCollectionSQLList, ItemTypeFieldsSQL itemTypeFieldsSQL,
-                           LibrarySQL librarySQL, LinkedList<ItemAuthorSQL> itemAuthorSQLList) {
+                           LibrarySQL librarySQL, LinkedList<ItemAuthorSQL> itemAuthorSQLList, UserRepository userRepository, UserSQL userSQL) {
 
         String failedItems = new String();
         try {
@@ -41,8 +41,7 @@ public class SQLActions {
             //Save the itemTypeFields relationship
             itemTypeFieldsRepo.save(itemTypeFieldsSQL);
 
-            //Save the library data
-            libraryRepo.save(librarySQL);
+
         } catch (Exception e) {
             failedItems = itemSQL.getKey();
         }

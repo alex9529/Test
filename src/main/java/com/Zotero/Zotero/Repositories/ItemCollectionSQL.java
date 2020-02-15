@@ -38,6 +38,7 @@ public class ItemCollectionSQL implements Serializable {
 
         this.collectionKey = collectionKey;
         this.itemKey = item.getKey();
+        this.libraryId = item.getLibrary().getId();
 
     }
 

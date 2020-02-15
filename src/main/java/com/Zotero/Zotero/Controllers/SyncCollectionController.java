@@ -86,7 +86,7 @@ public class SyncCollectionController {
 
 
 
-        //Delete Items from DB if they are no longer available on Zotero
+        //Delete Items from DB if they are no longer available in Zotero collection
         int deletedItems = sqlActions.CheckForRemovedItemsInCollection(itemRepo, collectionRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo,
                 collectionKey, collectionSQLList, itemList);
 
@@ -97,7 +97,7 @@ public class SyncCollectionController {
         for (int k = 0; k < itemSQLList.size(); k++) {
 
                 failedItems.add(sqlActions.saveItem(itemRepo, collectionRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo, libraryRepo,
-                        itemSQLList.get(k), collectionSQLList, itemCollectionSQLList, itemTypeFieldsSQL, librarySQL, itemAuthorSQLList));
+                        itemSQLList.get(k), collectionSQLList, itemCollectionSQLList, itemTypeFieldsSQL, librarySQL, itemAuthorSQLList, userRepo, userSQL));
                 if (failedItems.getLast().equals("")) {
                     failedItems.removeLast();
                 }
@@ -105,6 +105,7 @@ public class SyncCollectionController {
 
         if (itemList.size() > 0) {
             sqlActions.saveUser(userSQL, userRepo);
+            libraryRepo.save(librarySQL);
         }
 
 
