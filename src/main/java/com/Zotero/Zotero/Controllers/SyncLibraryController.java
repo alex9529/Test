@@ -68,6 +68,7 @@ public class SyncLibraryController {
         LinkedList<CollectionSQL> collectionSQLList = new LinkedList<>();
         LinkedList<ItemCollectionSQL> itemCollectionSQLList = new LinkedList<>();
         LinkedList<ItemAuthorSQL> itemAuthorSQLList = new LinkedList<>();
+        int[] deleteCollectionsAndItems = new int[2];
         int deletedItems = 0;
         int deletedCollections = 0;
         int numberOfItems = 0;
@@ -112,9 +113,10 @@ public class SyncLibraryController {
 
 
         //Delete Collections from DB if they are no longer available on Zotero
-        deletedCollections = sqlActions.CheckForRemovedCollectionsInLibrary(itemRepo, collectionRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo,
+        deleteCollectionsAndItems = sqlActions.CheckForRemovedCollectionsInLibrary(itemRepo, collectionRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo,
                 collectionSQLList, Integer.parseInt(id));
-
+        deletedCollections += deleteCollectionsAndItems[0];
+        deletedItems += deleteCollectionsAndItems[1];
 
         //Save the user and library data
         if (itemList.size() > 0) {

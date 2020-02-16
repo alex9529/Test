@@ -34,22 +34,27 @@
 
 
         <form action="/syncLibrary" target="blank" method="get">
-            <input type="submit" value="Alle Items aus der gesamten Bibliothek synchronisieren">
+            <input type="submit" value="Alle Items aus der gesamten Bibliothek synchronisieren.">
             <input id="id1" type="hidden" name="id"/>
             <input id="apiKey1" type="hidden" name="apiKey"/>
             <input id="groupsOrUsers1" type="hidden" name="groupsOrUsers"/>
-            Sollen Items, die sich in KEINER Collection befinden, auch berücksichtigt werden? Hinweis: dieser Vorgang kann deutlich länger dauern.
+            <br>
             <input id="collectionlessItems" type="checkbox" name="collectionlessItems">
+            Sollen Items, die sich zwar in der Bibliothek, jedoch Teil KEINER Collection sind, mitberücksichtigt werden? Hinweis: Dieser Vorgang kann deutlich länger dauern.
+
         </form>
 
 
         <form action="/syncCollection" target="blank" method="get">
             <br>
-            <input type="submit" value="Alle Items aus einer bestimmten Collection synchronisieren">
+            <input type="submit" value="Alle Items aus einer bestimmten Collection synchronisieren.">
+            <input type="text" name="collectionKey" placeholder="Collection Key" required>
+            <br>
+            Hinweis: Falls die Collection untergeordnete Sub-Collections beinhaltet, werden diese NICHT mitberücksichtigt.
             <input id="id2" type="hidden" name="id"/>
             <input id="apiKey2" type="hidden" name="apiKey"/>
             <input id="groupsOrUsers2" type="hidden" name="groupsOrUsers"/>
-            <input type="text" name="collectionKey" placeholder="Collection Key" required>
+
             <br>
         </form>
         <iframe id="myFrame" src="https://api.zotero.org/" width="100%" height=600px style="background-color: white"

@@ -200,11 +200,12 @@ public class SQLActions {
 
 
 
-    public int CheckForRemovedCollectionsInLibrary(ItemRepository itemRepo, CollectionRepository collectionRepo, ItemCollectionRepository itemCollectionRepo,
+    public int[] CheckForRemovedCollectionsInLibrary(ItemRepository itemRepo, CollectionRepository collectionRepo, ItemCollectionRepository itemCollectionRepo,
                                              ItemTypeFieldsRepository itemTypeFieldsRepo, ItemAuthorRepository itemAuthorRepo,
                                              LinkedList<CollectionSQL> collectionSQLList, int libraryId) {
-
+        int[] deletedCollectionsAndItems = new int[2];
         int deletedCollections = 0;
+        int deletedItems = 0;
 
         //Get all Collections in the DB
         ArrayList<CollectionSQL> repositoryCollections = (ArrayList<CollectionSQL>) GetAllCollections(collectionRepo, libraryId);
@@ -230,14 +231,17 @@ public class SQLActions {
                 for (int i = 0; i<repositoryItemCollection.size(); i++){
                     RemoveItem(itemRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo,
                             repositoryItemCollection.get(i).getItemKey(), repositoryCollections.get(c));
-                    deletedCollections++;
+                    deletedItems++;
                 }
+                deletedCollections++;
                 //Remove the collection itself
                 RemoveCollection(collectionRepo, repositoryCollections.get(c));
 
             }
         }
-        return deletedCollections;
+        deletedCollectionsAndItems[0] = deletedCollections;
+        deletedCollectionsAndItems[1] = deletedItems;
+        return deletedCollectionsAndItems;
     }
 
     private void RemoveCollection(CollectionRepository collectionRepo, CollectionSQL collectionSQL) {
