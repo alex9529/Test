@@ -1,13 +1,11 @@
 package com.Zotero.Zotero.Controllers;
 
 
-import com.Zotero.Zotero.JSONObjects.Library;
 import com.Zotero.Zotero.Services.APICalls;
 import com.Zotero.Zotero.JSONObjects.Item;
 import com.Zotero.Zotero.Repositories.*;
 import com.Zotero.Zotero.Services.SQLActions;
 import com.Zotero.Zotero.Services.SQLEntities;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -67,7 +65,7 @@ public class SyncCollectionController {
 
         LinkedList<Item> itemList;
         LinkedList<ItemSQL> itemSQLList;
-        LinkedList<CollectionSQL> collectionSQLList;
+        CollectionSQL collectionSQLList;
         LinkedList<ItemCollectionSQL> itemCollectionSQLList;
         LinkedList<ItemAuthorSQL> itemAuthorSQLList;
 
@@ -77,7 +75,7 @@ public class SyncCollectionController {
 
         itemList = sqlEntities.getItemList();
         itemSQLList = sqlEntities.getItemSQLList();
-        collectionSQLList = sqlEntities.getCollectionSQLList();
+        collectionSQLList = sqlEntities.getCollectionSQL();
         itemCollectionSQLList = sqlEntities.getItemCollectionSQLList();
         itemAuthorSQLList = sqlEntities.getItemAuthorSQLList();
         itemTypeFieldsSQL = sqlEntities.getItemTypeFieldsSQL();
@@ -96,8 +94,8 @@ public class SyncCollectionController {
         failedItems.clear();
         for (int k = 0; k < itemSQLList.size(); k++) {
 
-                failedItems.add(sqlActions.saveItem(itemRepo, collectionRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo, libraryRepo,
-                        itemSQLList.get(k), collectionSQLList, itemCollectionSQLList, itemTypeFieldsSQL, librarySQL, itemAuthorSQLList, userRepo, userSQL));
+                failedItems.add(sqlActions.saveItem(itemRepo, collectionRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo,
+                        itemSQLList.get(k), collectionSQLList, itemCollectionSQLList, itemTypeFieldsSQL, itemAuthorSQLList));
                 if (failedItems.getLast().equals("")) {
                     failedItems.removeLast();
                 }

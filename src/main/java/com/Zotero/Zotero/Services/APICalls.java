@@ -3,6 +3,7 @@ package com.Zotero.Zotero.Services;
 import com.Zotero.Zotero.JSONObjects.Collection;
 import com.Zotero.Zotero.JSONObjects.Item;
 import com.Zotero.Zotero.Repositories.*;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
@@ -31,7 +32,16 @@ public class APICalls {
 
         URL obj = new URL(address);
         URLConnection conn = obj.openConnection();
-        int totalItems = Integer.parseInt(conn.getHeaderField("Total-Results"));
+
+        int totalItems  = 0;
+
+        try {
+            totalItems = Integer.parseInt(conn.getHeaderField("Total-Results"));
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            System.err.println("Check your Internet connection.");
+        }
+
         return totalItems;
     }
 
@@ -244,17 +254,24 @@ public class APICalls {
             address = address.replace("{" + entry.getKey() + "}", entry.getValue());
         }
 
+        LinkedList<Collection> collectionList = new LinkedList<>();
+        try {
+            Collection[] collections = (restTemplate.getForObject(
+                    address, Collection[].class));
+            collectionList = new LinkedList<Collection>(Arrays.asList(collections));
 
-        Collection[] collections = (restTemplate.getForObject(
-                address, Collection[].class));
-        LinkedList<Collection> collectionList = new LinkedList<Collection>(Arrays.asList(collections));
+            for (int k = 0; k < collectionList.size(); k++) {
+                collectionList.set(k, CallCollection(restTemplate, libraryId, collections[k].getKey(), apiKey, groupOrUser));
+            }
 
-        for (int k = 0; k < collectionList.size(); k++) {
-            collectionList.set(k, CallCollection(restTemplate, libraryId, collections[k].getKey(), apiKey, groupOrUser));
-
+        } catch (RestClientException e) {
+            e.printStackTrace();
+            System.err.println("Check your internet connection.");
         }
 
         return collectionList;
+
+
     }
 
     public Collection CallCollection(RestTemplate restTemplate, String libraryId, String collectionId, String apiKey, String groupOrUser) {
@@ -294,8 +311,8 @@ public class APICalls {
 
         LinkedList<Item> itemList = new LinkedList<>();
         LinkedList<ItemSQL> itemSQLList = new LinkedList<ItemSQL>();
-        LinkedList<CollectionSQL> collectionSQLList = new LinkedList<CollectionSQL>();
-        LinkedList<ItemCollectionSQL> itemCollectionSQLList = new LinkedList<>();
+        CollectionSQL collectionSQL;
+        LinkedList<ItemCollectionSQL> itemCollectionSQL = new LinkedList<>();
         LinkedList<ItemAuthorSQL> itemAuthorSQLList = new LinkedList<>();
         ItemTypeFieldsSQL itemTypeFieldsSQL = new ItemTypeFieldsSQL();
         UserSQL userSQL = new UserSQL();
@@ -322,13 +339,13 @@ public class APICalls {
 
 
         //Get the collection and transform it into an SQL-ready object
-        CollectionSQL collectionSQL = new CollectionSQL(CallCollection(restTemplate, id, collectionKey, apiKey, groupsOrUsers));
-        collectionSQLList.add(collectionSQL);
+        collectionSQL = new CollectionSQL(CallCollection(restTemplate, id, collectionKey, apiKey, groupsOrUsers));
+
 
         //Get all the Collection - Item relationships
         //Loop through all items in the library
         for (int i = 0; i < itemList.size(); i++) {
-            itemCollectionSQLList.add(new ItemCollectionSQL(itemList.get(i), collectionKey));
+            itemCollectionSQL.add(new ItemCollectionSQL(itemList.get(i), collectionKey));
         }
 
 
@@ -360,7 +377,7 @@ public class APICalls {
         }
 
 
-        sqlEntities = new SQLEntities(itemList,itemSQLList,collectionSQLList,itemCollectionSQLList,itemAuthorSQLList,itemTypeFieldsSQL,userSQL,librarySQL);
+        sqlEntities = new SQLEntities(itemList,itemSQLList,collectionSQL,itemCollectionSQL,itemAuthorSQLList,itemTypeFieldsSQL,userSQL,librarySQL);
 
 
         return  sqlEntities;

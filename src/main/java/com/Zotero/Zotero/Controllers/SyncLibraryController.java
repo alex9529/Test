@@ -26,7 +26,6 @@ public class SyncLibraryController {
     private ItemTypeFieldsSQL itemTypeFieldsSQL;
 
 
-
     private final ItemRepository itemRepo;
     private final CollectionRepository collectionRepo;
     private final ItemCollectionRepository itemCollectionRepo;
@@ -55,7 +54,8 @@ public class SyncLibraryController {
     public String syncLibrary(RestTemplate restTemplate,
                               @RequestParam(name = "groupsOrUsers", required = false, defaultValue = "") String groupsOrUsers,
                               @RequestParam(name = "apiKey", required = false, defaultValue = "") String apiKey,
-                              @RequestParam(name = "id", required = false, defaultValue = "") String id, Model model
+                              @RequestParam(name = "id", required = false, defaultValue = "") String id,
+                              @RequestParam(name = "collectionlessItems", required = false, defaultValue = "off") String collectionlessItems, Model model
 
     ) throws IOException {
 
@@ -70,8 +70,7 @@ public class SyncLibraryController {
         LinkedList<ItemAuthorSQL> itemAuthorSQLList = new LinkedList<>();
         int deletedItems = 0;
         int deletedCollections = 0;
-
-
+        int numberOfItems = 0;
 
 
         //Get all Collections from Library
@@ -79,46 +78,42 @@ public class SyncLibraryController {
 
 
         //Loop through all collections
-        for (int c = 0; c<collections.size(); c++){
+        for (int c = 0; c < collections.size(); c++) {
             //Generate the itemList and all the necessary SQL-ready entities
-            SQLEntities sqlEntities = apiCalls.PrepareItemsForDB(restTemplate,groupsOrUsers,apiKey,id,collections.get(c).getCollectionKey());
+            SQLEntities sqlEntities = apiCalls.PrepareItemsForDB(restTemplate, groupsOrUsers, apiKey, id, collections.get(c).getCollectionKey());
 
             itemList = sqlEntities.getItemList();
             itemSQLList = sqlEntities.getItemSQLList();
-            collectionSQLList = sqlEntities.getCollectionSQLList();
+            collectionSQLList.add(sqlEntities.getCollectionSQL());
             itemCollectionSQLList = sqlEntities.getItemCollectionSQLList();
             itemAuthorSQLList = sqlEntities.getItemAuthorSQLList();
             itemTypeFieldsSQL = sqlEntities.getItemTypeFieldsSQL();
-
-            if (librarySQL.getLibraryName()==null){
-                userSQL = sqlEntities.getUserSQL();
-                librarySQL = sqlEntities.getLibrarySQL();
-            }
-
+            userSQL = sqlEntities.getUserSQL();
+            librarySQL = sqlEntities.getLibrarySQL();
 
 
 
             //Each item in itemSQLList is being saved in the database including all the relevant SQL tables: collection, itemCollection, itemTypeFields, itemAuthor, library
             failedItems.clear();
             for (int k = 0; k < itemSQLList.size(); k++) {
-                failedItems.add(sqlActions.saveItem(itemRepo, collectionRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo, libraryRepo,
-                        itemSQLList.get(k), collectionSQLList, itemCollectionSQLList, itemTypeFieldsSQL, librarySQL, itemAuthorSQLList, userRepo, userSQL));
+                failedItems.add(sqlActions.saveItem(itemRepo, collectionRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo,
+                        itemSQLList.get(k), collectionSQLList.get(c), itemCollectionSQLList, itemTypeFieldsSQL, itemAuthorSQLList));
                 if (failedItems.getLast().equals("")) {
                     failedItems.removeLast();
                 }
             }
+
+            numberOfItems = numberOfItems + itemList.size();
+
+            //Delete Items from DB if they are no longer available in Zotero collection
+            deletedItems = deletedItems + sqlActions.CheckForRemovedItemsInCollection(itemRepo, collectionRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo,
+                    collectionSQLList.get(c).getCollectionKey(), collectionSQLList.get(c), itemList);
         }
 
 
         //Delete Collections from DB if they are no longer available on Zotero
         deletedCollections = sqlActions.CheckForRemovedCollectionsInLibrary(itemRepo, collectionRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo,
-                collectionSQLList, librarySQL);
-
-
-        //Delete Items from DB if they are no longer available in library on Zotero
-        deletedItems = sqlActions.CheckForRemovedItemsInLibrary(itemRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo,
-                collectionSQLList, itemList, librarySQL);
-
+                collectionSQLList, Integer.parseInt(id));
 
 
         //Save the user and library data
@@ -128,41 +123,80 @@ public class SyncLibraryController {
         }
 
 
-        /**
-
-        //All items from the library are called and transformed into SQL-ready objects
-        itemList = new LinkedList<>(apiCalls.CallAllItems(restTemplate, id, apiKey, groupsOrUsers));
-
-        //The items are transformed into SQL-ready objects
-        itemSQLList = new LinkedList<>();
-        for (int k = 0; k < itemList.size(); k++) {
-            itemSQLList.add(new ItemSQL(itemList.get(k)));
-        }
-
-         */
+        // -----------------------------collection-less items---------------------------------------------//
 
 
-        //Each item in itemSQLList is being saved in the database including all the relevant SQL tables: collection, itemCollection, itemTypeFields, itemAuthor, library
-        failedItems.clear();
-        for (int k = 0; k < itemSQLList.size(); k++) {
-            failedItems.add(sqlActions.saveItem(itemRepo, collectionRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo, libraryRepo,
-                    itemSQLList.get(k), collectionSQLList, itemCollectionSQLList, itemTypeFieldsSQL, librarySQL, itemAuthorSQLList, userRepo, userSQL));
-            if (failedItems.getLast().equals("")) {
-                failedItems.removeLast();
+        //If collection-less items shall be considered, call ALL items from the Library
+        //Note: this might take significantly longer
+        if (collectionlessItems.equals("on")) {
+
+
+            LinkedList<ItemTypeFieldsSQL> itemTypeFieldsSQLList = new LinkedList<>();
+            itemAuthorSQLList = new LinkedList<>();
+
+            //All items from the library are called and transformed into SQL-ready objects
+            itemList = new LinkedList<>(apiCalls.CallAllItems(restTemplate, id, apiKey, groupsOrUsers));
+
+            //The items amd the type fields are transformed into SQL-ready objects
+            itemSQLList = new LinkedList<>();
+            for (int k = 0; k < itemList.size(); k++) {
+                itemSQLList.add(new ItemSQL(itemList.get(k)));
+                itemTypeFieldsSQLList.add(new ItemTypeFieldsSQL(itemList.get(k)));
+
             }
+
+            //Get all the Author - Item relationships
+            //Loop through all items in the library
+            for (int i = 0; i < itemList.size(); i++) {
+                //Loop through all authors of an item
+                for (int a = 0; a < itemList.get(i).getData().getCreators().size(); a++) {
+                    itemAuthorSQLList.add(new ItemAuthorSQL(itemList.get(i), a));
+                }
+
+            }
+
+            //Each item in itemSQLList is being saved in the database including all the relevant SQL tables: collection, itemCollection, itemTypeFields, itemAuthor, library
+            for (int i = 0; i<itemList.size(); i++){
+                failedItems.clear();
+                for (int k = 0; k < itemSQLList.size(); k++) {
+                    failedItems.add(sqlActions.saveItemWithNoCollection(itemRepo, itemTypeFieldsRepo, itemAuthorRepo,
+                            itemSQLList.get(k), itemTypeFieldsSQLList.get(i), itemAuthorSQLList));
+                    if (failedItems.getLast().equals("")) {
+                        failedItems.removeLast();
+                    }
+                }
+            }
+
+
+
+            //Save the user and library data
+            if (itemList.size() > 0) {
+                sqlActions.saveUser(new UserSQL(itemList.getFirst()), userRepo);
+                libraryRepo.save(new LibrarySQL(itemList.getFirst()));
+            }
+
+            numberOfItems = numberOfItems + itemList.size();
+
+            //Delete Items from DB if they are no longer available in Zotero library
+            deletedItems = deletedItems + sqlActions.CheckForRemovedItemsInLibrary(itemRepo, itemTypeFieldsRepo, itemAuthorRepo,
+                    itemList, Integer.parseInt(id));
+
+
         }
-
-
 
         //Get the library name
-        String libraryName = (new LinkedList<Collection>(apiCalls.CallAllCollections(restTemplate, id, apiKey, groupsOrUsers))).get(0).getLibrary().getName();
+        String libraryName = id;
+        try {
+            libraryName = (new LinkedList<Collection>(apiCalls.CallAllCollections(restTemplate, id, apiKey, groupsOrUsers))).get(0).getLibrary().getName();
 
-
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Possibly no collections to retrieve the library name from.");
+        }
 
 
         //Get the number of item chunks of the size between 1 and 100
         String url = apiCalls.AssembleURL(id, apiKey, groupsOrUsers);
-        int numberOfItems = itemList.size();
 
 
         int successfulItems = numberOfItems - failedItems.size();

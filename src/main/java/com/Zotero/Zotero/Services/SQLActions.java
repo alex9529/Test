@@ -13,9 +13,9 @@ public class SQLActions {
 
 
     public String saveItem(ItemRepository itemRepo, CollectionRepository collectionRepo, ItemCollectionRepository itemCollectionRepo,
-                           ItemTypeFieldsRepository itemTypeFieldsRepo, ItemAuthorRepository itemAuthorRepo, LibraryRepository libraryRepo,
-                           ItemSQL itemSQL, LinkedList<CollectionSQL> collectionSQLList, LinkedList<ItemCollectionSQL> itemCollectionSQLList, ItemTypeFieldsSQL itemTypeFieldsSQL,
-                           LibrarySQL librarySQL, LinkedList<ItemAuthorSQL> itemAuthorSQLList, UserRepository userRepository, UserSQL userSQL) {
+                           ItemTypeFieldsRepository itemTypeFieldsRepo, ItemAuthorRepository itemAuthorRepo,
+                           ItemSQL itemSQL, CollectionSQL collectionSQLList, LinkedList<ItemCollectionSQL> itemCollectionSQLList, ItemTypeFieldsSQL itemTypeFieldsSQL,
+                           LinkedList<ItemAuthorSQL> itemAuthorSQLList) {
 
         String failedItems = new String();
         try {
@@ -29,9 +29,8 @@ public class SQLActions {
             }
 
             //Save all the collection data
-            for (int i = 0; i < collectionSQLList.size(); i++) {
-                collectionRepo.save(collectionSQLList.get(i));
-            }
+            collectionRepo.save(collectionSQLList);
+
 
             //Save the itemAuthor relationship
             for (int i = 0; i < itemAuthorSQLList.size(); i++) {
@@ -50,9 +49,39 @@ public class SQLActions {
     }
 
 
+    public String saveItemWithNoCollection(ItemRepository itemRepo,
+                           ItemTypeFieldsRepository itemTypeFieldsRepo, ItemAuthorRepository itemAuthorRepo,
+                           ItemSQL itemSQL, ItemTypeFieldsSQL itemTypeFieldsSQL,
+                           LinkedList<ItemAuthorSQL> itemAuthorSQLList) {
+        String failedItems = new String();
+        try {
+
+            //Save the item. If an error occurs, put it into an array of failed item synchronizations
+            itemRepo.save(itemSQL);
+
+
+            //Save the itemAuthor relationship
+            for (int i = 0; i < itemAuthorSQLList.size(); i++) {
+                itemAuthorRepo.save(itemAuthorSQLList.get(i));
+            }
+
+            //Save the itemTypeFields relationship
+            itemTypeFieldsRepo.save(itemTypeFieldsSQL);
+
+        } catch (Exception e) {
+            failedItems = itemSQL.getKey();
+        }
+
+
+
+
+        return failedItems;
+    }
+
+
     public void RemoveItem(ItemRepository itemRepo, ItemCollectionRepository itemCollectionRepo,
                            ItemTypeFieldsRepository itemTypeFieldsRepo, ItemAuthorRepository itemAuthorRepo,
-                           String itemKey, LinkedList<CollectionSQL> collectionSQLList) {
+                           String itemKey, CollectionSQL collection) {
 
 
         //Get a list of all the item-collection relationships from the table item_collection. If the item exists in only one collection, it can be safely deleted,
@@ -65,8 +94,17 @@ public class SQLActions {
             itemAuthorRepo.removeByItemKey(itemKey);
             itemTypeFieldsRepo.removeByKey(itemKey);
         } else {
-            itemCollectionRepo.removeByItemKeyAndCollectionKey(itemKey, collectionSQLList.get(0).getCollectionKey());
+            itemCollectionRepo.removeByItemKeyAndCollectionKey(itemKey, collection.getCollectionKey());
         }
+    }
+
+
+    private void RemoveCollectionlessItem(ItemRepository itemRepo, ItemTypeFieldsRepository itemTypeFieldsRepo, ItemAuthorRepository itemAuthorRepo, String itemKey) {
+        //If the item exists in the library top level and nowhere else, it can be safely deleted,
+        //including all the affected tables in the DB (item_type_fields, item_author, item_collection).
+        itemRepo.removeByKey(itemKey);
+        itemAuthorRepo.removeByItemKey(itemKey);
+        itemTypeFieldsRepo.removeByKey(itemKey);
     }
 
     public Iterable<ItemCollectionSQL> GetItemCollectionList(ItemCollectionRepository itemCollectionRepo, String collectionKey) {
@@ -93,7 +131,7 @@ public class SQLActions {
 
     public int CheckForRemovedItemsInCollection(ItemRepository itemRepo, CollectionRepository collectionRepo, ItemCollectionRepository itemCollectionRepo,
                                                 ItemTypeFieldsRepository itemTypeFieldsRepo, ItemAuthorRepository itemAuthorRepo,
-                                                String collectionKey, LinkedList<CollectionSQL> collectionSQLList, LinkedList<Item> itemList) {
+                                                String collectionKey, CollectionSQL collectionSQL, LinkedList<Item> itemList) {
 
         int deletedItems = 0;
 
@@ -115,28 +153,28 @@ public class SQLActions {
             //If there is no match (i.e. the item in the DB is no longer available on Zotero), remove it
             if (!match) {
                 RemoveItem(itemRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo,
-                        repositoryItemCollection.get(i).getItemKey(), collectionSQLList);
+                        repositoryItemCollection.get(i).getItemKey(), collectionSQL);
                 deletedItems++;
             }
         }
 
         //update the collection table (the number of items attribute will be updated this way)
 
-        collectionRepo.save(collectionSQLList.get(0));
+        collectionRepo.save(collectionSQL);
 
 
 
         return deletedItems;
     }
 
-    public int CheckForRemovedItemsInLibrary(ItemRepository itemRepo, ItemCollectionRepository itemCollectionRepo,
+    public int CheckForRemovedItemsInLibrary(ItemRepository itemRepo,
                                              ItemTypeFieldsRepository itemTypeFieldsRepo, ItemAuthorRepository itemAuthorRepo,
-                                             LinkedList<CollectionSQL> collectionSQLList, LinkedList<Item> itemList, LibrarySQL librarySQL) {
+                                             LinkedList<Item> itemList, int libraryId) {
 
         int deletedItems = 0;
 
         //Get all items in the DB which are part of the selected library
-        ArrayList<ItemSQL> repositoryItems = (ArrayList<ItemSQL>) GetAllItemsFromLibrary(itemRepo, librarySQL.getLibraryId());
+        ArrayList<ItemSQL> repositoryItems = (ArrayList<ItemSQL>) GetAllItemsFromLibrary(itemRepo, libraryId);
 
         //Loop through all the items
         for (int i = 0; i < repositoryItems.size(); i++) {
@@ -152,22 +190,24 @@ public class SQLActions {
             }
             //If there is no match (i.e. the item in the DB is no longer available on Zotero), remove it
             if (!match) {
-                RemoveItem(itemRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo,
-                        repositoryItems.get(i).getKey(), collectionSQLList);
+                RemoveCollectionlessItem(itemRepo, itemTypeFieldsRepo, itemAuthorRepo,
+                        repositoryItems.get(i).getKey());
                 deletedItems++;
             }
         }
         return deletedItems;
     }
 
+
+
     public int CheckForRemovedCollectionsInLibrary(ItemRepository itemRepo, CollectionRepository collectionRepo, ItemCollectionRepository itemCollectionRepo,
                                              ItemTypeFieldsRepository itemTypeFieldsRepo, ItemAuthorRepository itemAuthorRepo,
-                                             LinkedList<CollectionSQL> collectionSQLList, LibrarySQL librarySQL) {
+                                             LinkedList<CollectionSQL> collectionSQLList, int libraryId) {
 
         int deletedCollections = 0;
 
-        //Get all Collection in the DB
-        ArrayList<CollectionSQL> repositoryCollections = (ArrayList<CollectionSQL>) GetAllCollections(collectionRepo, librarySQL.getLibraryId());
+        //Get all Collections in the DB
+        ArrayList<CollectionSQL> repositoryCollections = (ArrayList<CollectionSQL>) GetAllCollections(collectionRepo, libraryId);
 
         //Loop through all the collections
         for (int c = 0; c < repositoryCollections.size(); c++) {
@@ -189,7 +229,7 @@ public class SQLActions {
                 //Remove all the items in the collection first
                 for (int i = 0; i<repositoryItemCollection.size(); i++){
                     RemoveItem(itemRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo,
-                            repositoryItemCollection.get(i).getItemKey(), collectionSQLList);
+                            repositoryItemCollection.get(i).getItemKey(), repositoryCollections.get(c));
                     deletedCollections++;
                 }
                 //Remove the collection itself
@@ -203,6 +243,8 @@ public class SQLActions {
     private void RemoveCollection(CollectionRepository collectionRepo, CollectionSQL collectionSQL) {
         collectionRepo.removeByCollectionKey(collectionSQL.getCollectionKey());
     }
+
+
 }
 
 
