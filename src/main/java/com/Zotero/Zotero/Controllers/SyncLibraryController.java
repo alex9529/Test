@@ -193,7 +193,7 @@ public class SyncLibraryController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Possibly no collections to retrieve the library name from.");
+            System.err.println("Library name retrieval not possible because there are no collections in this library.");
         }
 
 
