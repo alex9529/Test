@@ -27,14 +27,14 @@
     </h1>
 
     <div class="center">
-        <button onclick="viewItems()">Alle Items aus der Bibliothek anzeigen</button>
+        <button th:width="100px" onclick="viewItems()">Alle Items aus der Bibliothek anzeigen</button>
         <br> <br>
-        <button onclick="viewCollections()">Alle Collections aus der Bibliothek anzeigen</button>
+        <button th:width="100px" onclick="viewCollections()">Alle Collections aus der Bibliothek anzeigen</button>
         <br> <br>
 
 
         <form action="/syncLibrary" target="blank" method="get">
-            <input type="submit" value="Alle Items aus der gesamten Bibliothek synchronisieren.">
+            <input width="100px" type="submit" value="Alle Items aus der gesamten Bibliothek synchronisieren.">
             <input id="id1" type="hidden" name="id"/>
             <input id="apiKey1" type="hidden" name="apiKey"/>
             <input id="groupsOrUsers1" type="hidden" name="groupsOrUsers"/>
@@ -47,7 +47,7 @@
 
         <form action="/syncCollection" target="blank" method="get">
             <br>
-            <input type="submit" value="Alle Items aus einer bestimmten Collection synchronisieren.">
+            <input width="100px" type="submit" value="Alle Items aus einer bestimmten Collection synchronisieren.">
             <input type="text" name="collectionKey" placeholder="Collection Key" required>
             <br>
             Hinweis: Falls die Collection untergeordnete Sub-Collections beinhaltet, werden diese NICHT mitberücksichtigt.

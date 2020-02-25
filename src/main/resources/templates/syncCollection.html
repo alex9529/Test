@@ -29,7 +29,7 @@
 
     <p th:text="${successfulItems} + '/'+ ${numberItems}  + ' Items aus der Collection &quot;' + ${collectionName} + '&quot; (Collection-Key: ' + ${collectionKey}+ ') sind nun auf dem neuesten Stand. (Diese Zahl kann Duplikate umfassen).' ">
     </p>
-    <p th:text="${deletedItems} + ' Items wurden aus der Datenbank entfernt.' ">
+    <p th:text="${deletedItems} + ' Items wurden aus der Datenbank entfernt. (Diese Zahl kann Duplikate umfassen)' ">
     </p>
 
     <a href="javascript:history.back()" style="color: white">Zurück zur Bibliothek</a>
