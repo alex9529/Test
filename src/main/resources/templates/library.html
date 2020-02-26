@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Zotero Sync Tool- Library</title>
+    <title>Zotero Sync Tool - Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
@@ -34,7 +34,7 @@
 
 
         <form action="/syncLibrary" target="blank" method="get">
-            <input width="100px" type="submit" value="Alle Items aus der gesamten Bibliothek synchronisieren.">
+            <input width="100px" type="submit" value="Alle Items aus der gesamten Bibliothek synchronisieren">
             <input id="id1" type="hidden" name="id"/>
             <input id="apiKey1" type="hidden" name="apiKey"/>
             <input id="groupsOrUsers1" type="hidden" name="groupsOrUsers"/>
@@ -47,8 +47,12 @@
 
         <form action="/syncCollection" target="blank" method="get">
             <br>
-            <input width="100px" type="submit" value="Alle Items aus einer bestimmten Collection synchronisieren.">
-            <input type="text" name="collectionKey" placeholder="Collection Key" required>
+            Alle Items aus einer bestimmten Collection synchronisieren:
+            <br>
+            <select id="collection" name="collection" required>
+            </select>
+            <br>
+            <input width="100px" type="submit" value="Ausgewählte Collection synchronisieren">
             <br>
             Hinweis: Falls die Collection untergeordnete Sub-Collections beinhaltet, werden diese NICHT mitberücksichtigt.
             <input id="id2" type="hidden" name="id"/>
@@ -56,6 +60,8 @@
             <input id="groupsOrUsers2" type="hidden" name="groupsOrUsers"/>
 
             <br>
+
+
         </form>
         <iframe id="myFrame" src="https://api.zotero.org/" width="100%" height=600px style="background-color: white"
                 hidden>
@@ -93,6 +99,22 @@
             document.getElementById("myFrame").src = "https://api.zotero.org/" + groupsOrUsers + "/" + id + "/collections/?key=" + apiKey;
             document.getElementById("myFrame").hidden = false;
         }
+
+
+        var select = document.getElementById("collection");
+        var options = /*[[${collections}]]*/ 'default';
+        for(var i = 0; i < options.length; i++) {
+            var opt = options[i];
+            var el = document.createElement("option");
+            el.textContent = opt;
+            el.value = opt;
+            select.appendChild(el);
+        }
+
+
+
+
+
     </script>
 
 </div>

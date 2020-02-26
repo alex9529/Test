@@ -58,7 +58,7 @@ public class SyncCollectionController {
                               @RequestParam(name = "groupsOrUsers", required = false, defaultValue = "") String groupsOrUsers,
                               @RequestParam(name = "apiKey", required = false, defaultValue = "") String apiKey,
                               @RequestParam(name = "id", required = false, defaultValue = "") String id,
-                              @RequestParam(name = "collectionKey", required = false, defaultValue = "") String collectionKey, Model model
+                              @RequestParam(name = "collection", required = false, defaultValue = "") String collectionKey, Model model
 
     ) throws IOException {
 
@@ -69,6 +69,8 @@ public class SyncCollectionController {
         LinkedList<ItemCollectionSQL> itemCollectionSQLList;
         LinkedList<ItemAuthorSQL> itemAuthorSQLList;
 
+        //Gets the last bit of the collection drop down menu selection which contains the collection key
+        collectionKey = collectionKey.substring(collectionKey.lastIndexOf(' ') + 1);
 
         //Generate the itemList and all the necessary SQL-ready entities
         SQLEntities sqlEntities = apiCalls.PrepareItemsForDB(restTemplate,groupsOrUsers,apiKey,id,collectionKey);

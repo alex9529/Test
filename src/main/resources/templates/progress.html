@@ -1,10 +1,87 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>Zotero Sync Tool - Fortschritt</title>
 </head>
 <body>
-$END$
+
+
+<div class="center">
+
+
+    <h1 align="center">
+        Zotero Sync Tool
+    </h1>
+
+    <p align="center">Synchronisation in Arbeit...</p>
+    <div class="myProgress" id="myProgress">
+        <div class="myBar" id="myBar"></div>
+    </div>
+
+    <br>
+    <button onclick="move()">Click Me</button>
+
+    <script>
+        var i = 0;
+        function move() {
+            if (i == 0) {
+                i = 1;
+                var elem = document.getElementById("myBar");
+                var width = 1;
+                var id = setInterval(frame, 1000);
+                function frame() {
+                    if (width >= 100) {
+                        clearInterval(id);
+                        i = 0;
+                    } else {
+                        width++;
+                        elem.style.width = width + "%";
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script>
+        $('myProgress')
+
+    </script>
+
+    <style>
+        .myProgress {
+            margin: auto;
+            width: 60%;
+            background-color: white;
+            color: white;
+            padding: 2px;
+        }
+    </style>
+    <style>
+        .myBar {
+            width: 0%;
+            height: 30px;
+            background-color: #4CAF50;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+
+        }
+    </style>
+
+
+</div>
+
+
+<style>
+    .center {
+        margin: auto;
+        width: 60%;
+        height: 950px;
+        background-color: #4379a5;
+        color: white;
+        padding: 20px;
+    }
+</style>
 </body>
 </html>
