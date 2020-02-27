@@ -23,7 +23,7 @@ public class SyncLibraryController {
     private APICalls apiCalls = new APICalls();
     private SQLActions sqlActions = new SQLActions();
 
-    private ItemTypeFieldsSQL itemTypeFieldsSQL;
+    private LinkedList<ItemTypeFieldsSQL> itemTypeFieldsSQLList;
 
 
     private final ItemRepository itemRepo;
@@ -88,7 +88,7 @@ public class SyncLibraryController {
             collectionSQLList.add(sqlEntities.getCollectionSQL());
             itemCollectionSQLList = sqlEntities.getItemCollectionSQLList();
             itemAuthorSQLList = sqlEntities.getItemAuthorSQLList();
-            itemTypeFieldsSQL = sqlEntities.getItemTypeFieldsSQL();
+            itemTypeFieldsSQLList = sqlEntities.getItemTypeFieldsSQL();
             userSQL = sqlEntities.getUserSQL();
             librarySQL = sqlEntities.getLibrarySQL();
 
@@ -98,7 +98,7 @@ public class SyncLibraryController {
             failedItems.clear();
             for (int k = 0; k < itemSQLList.size(); k++) {
                 failedItems.add(sqlActions.saveItem(itemRepo, collectionRepo, itemCollectionRepo, itemTypeFieldsRepo, itemAuthorRepo,
-                        itemSQLList.get(k), collectionSQLList.get(c), itemCollectionSQLList, itemTypeFieldsSQL, itemAuthorSQLList));
+                        itemSQLList.get(k), collectionSQLList.get(c), itemCollectionSQLList, itemTypeFieldsSQLList.get(k), itemAuthorSQLList));
                 if (failedItems.getLast().equals("")) {
                     failedItems.removeLast();
                 }

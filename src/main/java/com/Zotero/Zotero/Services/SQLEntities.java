@@ -11,7 +11,7 @@ public class SQLEntities {
     LinkedList<ItemSQL> itemSQLList = new LinkedList<>();
     LinkedList<ItemCollectionSQL> itemCollectionSQLList = new LinkedList<>();
     LinkedList<ItemAuthorSQL> itemAuthorSQLList = new LinkedList<>();
-    ItemTypeFieldsSQL itemTypeFieldsSQL = new ItemTypeFieldsSQL();
+    LinkedList<ItemTypeFieldsSQL> itemTypeFieldsSQL = new LinkedList<>();
     CollectionSQL collectionSQL;
     UserSQL userSQL = new UserSQL();
     LibrarySQL librarySQL = new LibrarySQL();
@@ -19,7 +19,7 @@ public class SQLEntities {
 
     public SQLEntities(LinkedList<Item> itemList, LinkedList<ItemSQL> itemSQLList, CollectionSQL collectionSQL,
                        LinkedList<ItemCollectionSQL> itemCollectionSQLList, LinkedList<ItemAuthorSQL> itemAuthorSQLList,
-                       ItemTypeFieldsSQL itemTypeFieldsSQL, UserSQL userSQL, LibrarySQL librarySQL) {
+                       LinkedList<ItemTypeFieldsSQL> itemTypeFieldsSQL, UserSQL userSQL, LibrarySQL librarySQL) {
         this.itemList = itemList;
         this.itemSQLList = itemSQLList;
         this.collectionSQL = collectionSQL;
@@ -50,7 +50,7 @@ public class SQLEntities {
         return itemAuthorSQLList;
     }
 
-    public ItemTypeFieldsSQL getItemTypeFieldsSQL() {
+    public LinkedList<ItemTypeFieldsSQL> getItemTypeFieldsSQL() {
         return itemTypeFieldsSQL;
     }
 

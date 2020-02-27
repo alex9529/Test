@@ -314,7 +314,7 @@ public class APICalls {
         CollectionSQL collectionSQL;
         LinkedList<ItemCollectionSQL> itemCollectionSQL = new LinkedList<>();
         LinkedList<ItemAuthorSQL> itemAuthorSQLList = new LinkedList<>();
-        ItemTypeFieldsSQL itemTypeFieldsSQL = new ItemTypeFieldsSQL();
+        LinkedList<ItemTypeFieldsSQL> itemTypeFieldsSQL = new LinkedList<>();
         UserSQL userSQL = new UserSQL();
         LibrarySQL librarySQL;
 
@@ -363,7 +363,7 @@ public class APICalls {
         //Get all the ItemTypeFields for an item
         //Loop through all items in the library
         for (int i = 0; i < itemList.size(); i++) {
-            itemTypeFieldsSQL = new ItemTypeFieldsSQL(itemList.get(i));
+            itemTypeFieldsSQL.add(new ItemTypeFieldsSQL(itemList.get(i)));
         }
 
         //Save user and library data
