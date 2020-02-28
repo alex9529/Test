@@ -12,6 +12,7 @@
 	<artifactId>Zotero</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Zotero</name>
+	<packaging>jar</packaging>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
@@ -87,13 +88,15 @@
             <version>1.5.2</version>
             <scope>compile</scope>
         </dependency>
+
 		<dependency>
-			<groupId>org.junit.platform</groupId>
-			<artifactId>junit-platform-commons</artifactId>
-			<version>1.5.2</version>
-			<scope>compile</scope>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
+
+
 
 	<dependencyManagement>
 		<dependencies>
@@ -108,6 +111,7 @@
 	</dependencyManagement>
 
 	<build>
+		<finalName>Zotero</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
