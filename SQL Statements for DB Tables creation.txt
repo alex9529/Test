@@ -19,7 +19,7 @@ CREATE TABLE "item" (
 CREATE TABLE "collection" (
   "collection_key" VARCHAR,
   "version" INT,
-  "user_project_id" VARCHAR,
+  "library_id" int,
   "links_self_href" VARCHAR,
   "num_items" INT,
   "num_collections" INT,
@@ -31,8 +31,9 @@ CREATE TABLE "collection" (
 
 CREATE TABLE "item_collection" (
   "item_key" VARCHAR,
-  "collection_key" VARCHAR
-  PRIMARY KEY (collection_key, item_key)
+  "collection_key" VARCHAR,
+  "library_id" int,
+  PRIMARY KEY (collection_key, item_key, library_id)
 );
 
 
@@ -85,7 +86,7 @@ CREATE TABLE "item_type_fields" (
   "audio_recording_format" varchar,
   "series_title" varchar,
   "volume" varchar,
-  "number_of_volumes" int,
+  "number_of_volumes" varchar,
   "place" varchar,
   "label" varchar,
   "running_time" varchar,

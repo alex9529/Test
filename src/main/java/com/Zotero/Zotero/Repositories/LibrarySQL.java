@@ -35,6 +35,13 @@ public class LibrarySQL {
         return libraryLink;
     }
 
+
+    public LibrarySQL(int id, String groupsOrUsers)  {
+        this.libraryId = id;
+        this.type = groupsOrUsers;
+
+    }
+
     public LibrarySQL(Item item)  {
 
         this.libraryId = item.getLibrary().getId();

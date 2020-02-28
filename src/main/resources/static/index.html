@@ -46,6 +46,10 @@
 
 <script th:inline="javascript">
 
+
+    //If the user is trying to view a private library and leaves the checkbox ("Ist dies eine Gruppenbibliothek?") empty, he
+    //must provide an API key in order to proceed to the next page.
+
     function viewItems(){
 
         if  (document.getElementById("groupCheckbox").checked === false){
