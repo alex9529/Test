@@ -16,6 +16,7 @@ public class ItemCollectionSQL implements Serializable {
     private String collectionKey;
     @Id
     private String  itemKey;
+
     private int libraryId;
 
     public ItemCollectionSQL() {
